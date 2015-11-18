@@ -56,5 +56,10 @@ namespace Phonebook.Data.Repositories
         {
             _phonebookEntities.Users.Remove(_phonebookEntities.Users.FirstOrDefault(u => u.Id == id));
         }
+
+        public void SaveChanges()
+        {
+            _phonebookEntities.SaveChanges();
+        }
     }
 }

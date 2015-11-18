@@ -74,6 +74,11 @@ namespace Phonebook.Data.Context
             }
         }
 
+        public void SaveChanges()
+        {
+            SaveUsersFile();
+        }
+
         public void Dispose()
         {
             SaveUsersFile();

@@ -23,6 +23,8 @@ namespace MyTest
 
             UserRepository userRepository = new UserRepository();
 
+            List<User> users = userRepository.GetAll().ToList();
+
             User userToUpdate = userRepository.Get(users[0].Id);
 
             userToUpdate.Username = "Test.Test";
@@ -31,12 +33,16 @@ namespace MyTest
 
             userRepository.Create(new User { Password = "password3", Username = "Sue.Smith" });
 
-            List<User> users = userRepository.GetAll().ToList();
+            List<User> users2 = userRepository.GetAll().ToList();
 
-            foreach (var user in users)
+            foreach (var user in users2)
             {
                 Console.WriteLine("Username: " + user.Username + ", Password: " + user.Password);
             }
+
+            userRepository.SaveChanges();
+
+            userRepository.Delete(users2[2].Id);
 
             userRepository.Dispose();
 
