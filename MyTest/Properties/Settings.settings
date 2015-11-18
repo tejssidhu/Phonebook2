@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MyTest.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="FilePaths" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F:\Users\Tej.Sidhu\Documents\visual studio 2012\Projects\Phonebook\MyTest\Json</Value>
+    </Setting>
+    <Setting Name="UserFile" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Users.txt</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
