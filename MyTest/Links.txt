@@ -1,0 +1,13 @@
+﻿http://stackoverflow.com/questions/1941928/best-way-to-store-data-locally-in-net-c
+http://blog.danskingdom.com/saving-and-loading-a-c-objects-data-to-an-xml-json-or-binary-file/
+http://www.dofactory.com/reference/csharp-coding-standards
+http://codereview.stackexchange.com/questions/33109/repository-service-design-pattern
+https://www.mockaroo.com/#tab_all
+
+https://www.google.co.uk/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=knockout%20js%20crud%20example
+http://www.codeproject.com/Articles/696466/Complete-End-to-End-CRUD-Operations-Using-Knockout
+
+https://www.google.co.uk/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=mstest%20assert
+
+https://www.google.co.uk/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=ways+of+persisting+data+without+SQL+.NET
+http://james.newtonking.com/archive/2009/02/14/writing-json-to-a-file-using-json-net
