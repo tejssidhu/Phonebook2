@@ -7,15 +7,13 @@ using Phonebook.Domain.Model;
 
 namespace Phonebook.Data.Context
 {
-    public class PhonebookEntities : IDisposable
+    public class PhonebookContext : IDisposable
     {
-        public string FilePath;
+        private readonly string _filePath;
         public IList<User> Users { get; set; }
 
-        public PhonebookEntities(string folderPath, string usersFilePath)
+        public PhonebookContext(string folderPath, string usersFilePath)
         {
-            string fullUserFilePath;
-
             if (!Directory.Exists(folderPath))
             {
                 throw new DirectoryNotFoundException(folderPath + " not found");
@@ -23,14 +21,12 @@ namespace Phonebook.Data.Context
 
             if (folderPath.EndsWith("\\"))
             {
-                fullUserFilePath = folderPath + usersFilePath;
+                _filePath = folderPath + usersFilePath;
             }
             else
             {
-                fullUserFilePath = folderPath + "\\" + usersFilePath;
+                _filePath = folderPath + "\\" + usersFilePath;
             }
-
-            FilePath = fullUserFilePath;
 
             LoadUsersFile();
         }
@@ -38,39 +34,39 @@ namespace Phonebook.Data.Context
         //Json.NET
         private void LoadUsersFile()
         {
-            if (File.Exists(FilePath))
+            if (File.Exists(_filePath))
             {
                 try
                 {
-                    Users = JsonSerialization.ReadFromJsonFile<List<User>>(FilePath) ?? new List<User>();
+                    Users = JsonSerialization.ReadFromJsonFile<List<User>>(_filePath) ?? new List<User>();
                 }
                 catch (Exception)
                 {
-                    throw new Exception("There was a problem reading from " + FilePath);
+                    throw new Exception("There was a problem reading from " + _filePath);
                 }
             }
             else
             {
-                throw new DirectoryNotFoundException(FilePath + " not found");
+                throw new DirectoryNotFoundException(_filePath + " not found");
             }
         }
 
         private void SaveUsersFile()
         {
-            if (File.Exists(FilePath))
+            if (File.Exists(_filePath))
             {
                 try
                 {
-                    JsonSerialization.WriteToJsonFile<List<User>>(FilePath, Users.ToList());
+                    JsonSerialization.WriteToJsonFile<List<User>>(_filePath, Users.ToList());
                 }
                 catch (Exception)
                 {
-                    throw new Exception("There was a problem writing to " + FilePath);
+                    throw new Exception("There was a problem writing to " + _filePath);
                 }
             }
             else
             {
-                throw new DirectoryNotFoundException(FilePath + " not found");
+                throw new DirectoryNotFoundException(_filePath + " not found");
             }
         }
 

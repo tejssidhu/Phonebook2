@@ -40,8 +40,6 @@ namespace MyTest
                 Console.WriteLine("Username: " + user.Username + ", Password: " + user.Password);
             }
 
-            userRepository.SaveChanges();
-
             userRepository.Delete(users2[2].Id);
 
             userRepository.Dispose();

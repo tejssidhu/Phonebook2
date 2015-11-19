@@ -8,35 +8,37 @@ using Phonebook.Domain.Model;
 
 namespace Phonebook.Data.Repositories
 {
-    public class UserRepository : IRepository<User> 
+    public class UserRepository : IRepository<User>
     {
-        private readonly PhonebookEntities _phonebookEntities;
+        private readonly PhonebookContext _phonebookContext;
 
         public UserRepository()
         {
-            _phonebookEntities = new PhonebookEntities(Settings.Default.FilePaths, Settings.Default.UserFile);
+            _phonebookContext = new PhonebookContext(Settings.Default.FilePaths, Settings.Default.UserFile);
         }
 
         public void Dispose()
         {
-            _phonebookEntities.Dispose();
+            _phonebookContext.Dispose();
         }
 
         public IList<User> GetAll()
         {
-            return _phonebookEntities.Users;
+            return _phonebookContext.Users;
         }
 
         public User Get(Guid id)
         {
-            return _phonebookEntities.Users.FirstOrDefault(u => u.Id == id);
+            return _phonebookContext.Users.FirstOrDefault(u => u.Id == id);
         }
 
         public Guid Create(User model)
         {
             model.Id = Guid.NewGuid();
 
-            _phonebookEntities.Users.Add(model);
+            _phonebookContext.Users.Add(model);
+
+            _phonebookContext.SaveChanges();
 
             return model.Id;
         }
@@ -50,16 +52,15 @@ namespace Phonebook.Data.Repositories
                 user.Username = model.Username;
                 user.Password = model.Password;
             }
+
+            _phonebookContext.SaveChanges();
         }
 
         public void Delete(Guid id)
         {
-            _phonebookEntities.Users.Remove(_phonebookEntities.Users.FirstOrDefault(u => u.Id == id));
-        }
+            _phonebookContext.Users.Remove(_phonebookContext.Users.FirstOrDefault(u => u.Id == id));
 
-        public void SaveChanges()
-        {
-            _phonebookEntities.SaveChanges();
+            _phonebookContext.SaveChanges();
         }
     }
 }
