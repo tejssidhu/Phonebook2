@@ -71,6 +71,7 @@
   <ItemGroup>
     <Content Include="Json\Users.txt" />
     <Content Include="Links.txt" />
+    <Content Include="Notes.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

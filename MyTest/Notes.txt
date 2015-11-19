@@ -1,0 +1,27 @@
+﻿Improvements
+- rewrite data layer to use MongoDB or NoSQL
+
+Kept services in one place UserServices
+ - all responsibilities of this class are related to user
+ - this is for ease of maintainence
+ - if services related to sub collections required management outside of their user context then this would jusity/require seperate service + repositorys
+
+ used Moq for testing
+  - services
+  - controllers
+
+ used .NET Transactional File Manager for testing
+  - repository to rollback text file updates
+
+Need to write tests for repositories - need to right in transactions?
+Need to write Selenium/Coded UI for testing UIs
+
+Used mockroo for dummy data but should have used NBuilder
+
+used JSON.NET for serialization + deserialization
+
+if the site became successful I would definately consider moving to a SQL db to cope with concurrency and allow setup of a web farm
+
+To do
+ - Knockout.JS CRUD
+ - WebAPI to initiate domain services
