@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Phonebook.Domain.Exceptions;
 using Phonebook.Domain.Interfaces.Repositories;
 using Phonebook.Domain.Model;
 using Phonebook.Domain.Services;
@@ -603,8 +604,76 @@ namespace Phonebook.Tests
             Assert.AreEqual(_user, retUser);
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(InvalidPasswordException))]
+        public void AuthenticateWithInvalidPasswordUserServices()
+        {
+            //arrange
+            var mockUserRepository = new Mock<IRepository<User>>();
+
+            mockUserRepository.Setup(x => x.GetAll()).Returns(_users);
+
+            UserService userService = new UserService(mockUserRepository.Object);
+
+            //act
+            User retUser = userService.Authenticate(_user.Username, _user.Password + "WRONG");
+
+            //assert - expect exception
+        }
+
+        [TestMethod]
+        public void AuthenticateValidPasswordUserServices()
+        {
+            //arrange
+            var mockUserRepository = new Mock<IRepository<User>>();
+
+            mockUserRepository.Setup(x => x.GetAll()).Returns(_users);
+
+            UserService userService = new UserService(mockUserRepository.Object);
+
+            //act
+            User retUser = userService.Authenticate(_user.Username, _user.Password);
+
+            //assert
+            Assert.AreEqual(_user, retUser);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ObjectNotFoundException))]
+        public void AuthenticateWithNoExistentUserUserServices()
+        {
+            //arrange
+            var mockUserRepository = new Mock<IRepository<User>>();
+
+            mockUserRepository.Setup(x => x.GetAll()).Returns(_users);
+
+            UserService userService = new UserService(mockUserRepository.Object);
+
+            //act
+            User retUser = userService.Authenticate(_user.Username + "DOESNTEXIST", _user.Password);
+
+            //assert - expect exception
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ObjectAlreadyExistException))]
+        public void CreateWithExistingUserUserServices()
+        {
+            //arrange
+            var mockUserRepository = new Mock<IRepository<User>>();
+
+            mockUserRepository.Setup(x => x.GetAll()).Returns(_users);
+
+            UserService userService = new UserService(mockUserRepository.Object);
+
+            //act
+            Guid id = userService.Create(_user);
+
+            //assert - expect exception
+        }
+
         //[TestMethod]
-        //public void CreateOnUserServices()
+        //public void CreateUserServices()
         //{
         //    //arrange
         //    var mockUserRepository = new Mock<IRepository<User>>();
@@ -614,42 +683,41 @@ namespace Phonebook.Tests
         //            Password = "7BbfOOoMJCf",
         //            Username = "igardner8",
         //            PhoneBook = new List<Contact>
-        //            {
-        //                new Contact
         //                {
-        //                    Title = "Mr",
-        //                    Email = "sperezy@nyu.edu",
-        //                    Forename = "Susan",
-        //                    Surname = "Perez",
-        //                    ContactNumbers = new List<ContactNumber>
+        //                    new Contact
         //                    {
-        //                        new ContactNumber {Description = "Mobile", TelephoneNumber = "86-(719)546-0680"},
-        //                        new ContactNumber {Description = "Mobile2", TelephoneNumber = "387-(833)766-7041"}
-        //                    }
-        //                },
-        //                new Contact
-        //                {
-        //                    Title = "Mr",
-        //                    Email = "lmcdonaldz@dedecms.com",
-        //                    Forename = "Louis",
-        //                    Surname = "Mcdonald",
-        //                    ContactNumbers = new List<ContactNumber>
+        //                        Title = "Mr",
+        //                        Email = "sperezy@nyu.edu",
+        //                        Forename = "Susan",
+        //                        Surname = "Perez",
+        //                        ContactNumbers = new List<ContactNumber>
+        //                        {
+        //                            new ContactNumber {Description = "Mobile", TelephoneNumber = "86-(719)546-0680"},
+        //                            new ContactNumber {Description = "Mobile2", TelephoneNumber = "387-(833)766-7041"}
+        //                        }
+        //                    },
+        //                    new Contact
         //                    {
-        //                        new ContactNumber {Description = "Mobile2", TelephoneNumber = "62-(113)771-6674"}
+        //                        Title = "Mr",
+        //                        Email = "lmcdonaldz@dedecms.com",
+        //                        Forename = "Louis",
+        //                        Surname = "Mcdonald",
+        //                        ContactNumbers = new List<ContactNumber>
+        //                        {
+        //                            new ContactNumber {Description = "Mobile2", TelephoneNumber = "62-(113)771-6674"}
+        //                        }
         //                    }
         //                }
-        //            }
         //        };
 
-        //    mockUserRepository.Setup(x => x.Create(userToCreate)).Returns(new Guid("0b21d4b6-eb42-456b-9828-a90cb604bceb"));
+        //    mockUserRepository.Setup(x => x.GetAll()).Returns(_users);
 
         //    UserService userService = new UserService(mockUserRepository.Object);
 
         //    //act
-        //    User retUser = userService.Get(id);
+        //    Guid id = userService.Create(_user);
 
         //    //assert
-        //    Assert.AreEqual(_user, retUser);
         //}
     }
 }

@@ -62,7 +62,7 @@ namespace Phonebook.Domain.Services
         {
             var user = _userRepository.GetAll().SingleOrDefault(u => u.Username == username);
 
-            if (user == null) throw new ObjectAlreadyExistException("User");
+            if (user == null) throw new ObjectNotFoundException("User");
 
             if (user.Password != password.Trim())
             {
