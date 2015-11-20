@@ -33,15 +33,12 @@ namespace Phonebook.Data.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Users.txt")]
         public string UserFile {
             get {
                 return ((string)(this["UserFile"]));
-            }
-            set {
-                this["UserFile"] = value;
             }
         }
     }

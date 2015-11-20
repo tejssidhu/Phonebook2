@@ -5,7 +5,7 @@
     <Setting Name="FilePaths" Type="System.String" Scope="Application">
       <Value Profile="(Default)">F:\Users\Tej.Sidhu\Documents\visual studio 2012\Projects\Phonebook\Phonebook.Data\Json\</Value>
     </Setting>
-    <Setting Name="UserFile" Type="System.String" Scope="User">
+    <Setting Name="UserFile" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Users.txt</Value>
     </Setting>
   </Settings>
