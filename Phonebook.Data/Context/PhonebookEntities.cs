@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Phonebook.Data.JsonUtilities;
+using Phonebook.Common.JsonUtilities;
 using Phonebook.Domain.Model;
-using Phonebook.Data.Properties;
 
 namespace Phonebook.Data.Context
 {
@@ -74,7 +73,7 @@ namespace Phonebook.Data.Context
             {
                 try
                 {
-                    JsonSerialization.WriteToJsonFile<List<User>>(_usersFilePath, Users.ToList());
+                    JsonSerialization.WriteToJsonFile(_usersFilePath, Users.ToList());
                 }
                 catch (Exception)
                 {
@@ -112,7 +111,7 @@ namespace Phonebook.Data.Context
             {
                 try
                 {
-                    JsonSerialization.WriteToJsonFile<List<Contact>>(_contactsFilePath, Contacts.ToList());
+                    JsonSerialization.WriteToJsonFile(_contactsFilePath, Contacts.ToList());
                 }
                 catch (Exception)
                 {
@@ -150,7 +149,7 @@ namespace Phonebook.Data.Context
             {
                 try
                 {
-                    JsonSerialization.WriteToJsonFile<List<ContactNumber>>(_contactNumbersFilePath, ContactNumbers.ToList());
+                    JsonSerialization.WriteToJsonFile(_contactNumbersFilePath, ContactNumbers.ToList());
                 }
                 catch (Exception)
                 {

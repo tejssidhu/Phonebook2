@@ -7,9 +7,6 @@ using Phonebook.Domain.Model;
 using Phonebook.Domain.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Phonebook.Tests
 {

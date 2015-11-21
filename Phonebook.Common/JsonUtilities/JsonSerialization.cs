@@ -2,7 +2,7 @@
 
 //http://blog.danskingdom.com/saving-and-loading-a-c-objects-data-to-an-xml-json-or-binary-file/
 
-namespace Phonebook.Data.JsonUtilities
+namespace Phonebook.Common.JsonUtilities
 {
     /// <summary>
     /// Functions for performing common Json Serialization operations.

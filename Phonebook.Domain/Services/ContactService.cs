@@ -5,8 +5,6 @@ using Phonebook.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Phonebook.Domain.Services
 {
@@ -21,17 +19,17 @@ namespace Phonebook.Domain.Services
             _userService = userService;
         }
 
-        public IList<Model.Contact> GetAll()
+        public IList<Contact> GetAll()
         {
             return _contactRepository.GetAll();
         }
 
-        public Model.Contact Get(Guid id)
+        public Contact Get(Guid id)
         {
             return _contactRepository.Get(id);
         }
 
-        public Guid Create(Model.Contact model)
+        public Guid Create(Contact model)
         {
             var user = _userService.Get(model.UserId);
 
@@ -46,7 +44,7 @@ namespace Phonebook.Domain.Services
             return id;
         }
 
-        public void Update(Model.Contact model)
+        public void Update(Contact model)
         {
             if (_contactRepository.GetAll().Any(c => c.UserId == model.UserId && c.Id != model.Id && c.Email == model.Email))
             {

@@ -28,5 +28,23 @@ namespace Phonebook.Domain.Model
 
             return (UserId == c.UserId) && (Title == c.Title) && (Forename == c.Forename) && (Surname == c.Surname) && (Email == c.Email);
         }
+
+        protected bool Equals(Contact other)
+        {
+            return UserId.Equals(other.UserId) && string.Equals(Title, other.Title) && string.Equals(Forename, other.Forename) && string.Equals(Surname, other.Surname) && string.Equals(Email, other.Email);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = UserId.GetHashCode();
+                hashCode = (hashCode*397) ^ (Title != null ? Title.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (Forename != null ? Forename.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (Surname != null ? Surname.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (Email != null ? Email.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
     }
 }

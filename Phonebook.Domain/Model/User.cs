@@ -26,5 +26,18 @@ namespace Phonebook.Domain.Model
 
             return (Username == u.Username) && (Password == u.Password);
         }
+
+        protected bool Equals(User other)
+        {
+            return string.Equals(Username, other.Username) && string.Equals(Password, other.Password);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((Username != null ? Username.GetHashCode() : 0)*397) ^ (Password != null ? Password.GetHashCode() : 0);
+            }
+        }
     }
 }

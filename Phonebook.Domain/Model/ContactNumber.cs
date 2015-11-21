@@ -17,5 +17,21 @@ namespace Phonebook.Domain.Model
 
             return (ContactId == cn.ContactId) && (Description == cn.Description) && (TelephoneNumber == cn.TelephoneNumber);
         }
+
+        protected bool Equals(ContactNumber other)
+        {
+            return ContactId.Equals(other.ContactId) && string.Equals(Description, other.Description) && string.Equals(TelephoneNumber, other.TelephoneNumber);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = ContactId.GetHashCode();
+                hashCode = (hashCode*397) ^ (Description != null ? Description.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (TelephoneNumber != null ? TelephoneNumber.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
     }
 }

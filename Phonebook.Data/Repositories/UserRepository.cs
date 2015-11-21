@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Phonebook.Data.Context;
-using Phonebook.Data.Properties;
 using Phonebook.Domain.Interfaces.Repositories;
 using Phonebook.Domain.Model;
 

@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Phonebook.Domain.Exceptions;
-using Phonebook.Domain.Interfaces.Repositories;
 using Phonebook.Domain.Model;
-using Phonebook.Domain.Services;
 using Phonebook.Data.Context;
 using Phonebook.Data.Repositories;
 
@@ -15,7 +11,7 @@ namespace Phonebook.Tests
     [TestClass]
     public class UserRepositoryTests
     {
-        private Configuration config;
+        private Configuration _config;
         private List<User> _users;
         private List<Contact> _contacts;
         private List<ContactNumber> _contactNumbers;
@@ -24,7 +20,7 @@ namespace Phonebook.Tests
         [TestInitialize]
         public void TestUserServiceTests()
         {
-            config = new Configuration
+            _config = new Configuration
             {
                 FilePaths = AppDomain.CurrentDomain.BaseDirectory.Substring(0, (AppDomain.CurrentDomain.BaseDirectory.Length - 10)) + "\\Json",
                 UsersFileName = "TestUsers.txt",
@@ -119,7 +115,7 @@ namespace Phonebook.Tests
             _contacts = new List<Contact> { contact1, contact2, contact3, contact4, contact5, contact6, contact7, contact8, contact9, contact10, contact11, contact12, contact13, contact14, contact15, contact16, contact17, contact18, contact19, contact20, contact21, contact22, contact23, contact24, contact25, contact26, contact27, contact28, contact29, contact31, contact32, contact33, contact34, contact35, contact36, contact37, contact38, contact39, contact40, contact41, contact42, contact43, contact44, contact45, contact46, contact47, contact48, contact49, contact50, contact51, contact52, contact53 };
             _contactNumbers = new List<ContactNumber> { contactNumber1, contactNumber2, contactNumber3, contactNumber4, contactNumber5, contactNumber6, contactNumber7, contactNumber8, contactNumber9, contactNumber10, contactNumber11, contactNumber12, contactNumber13, contactNumber14, contactNumber15, contactNumber16 };
 
-            PhonebookContext pbContext = new PhonebookContext(config);
+            PhonebookContext pbContext = new PhonebookContext(_config);
 
             pbContext.Users = _users;
             pbContext.Contacts = _contacts;
@@ -138,7 +134,7 @@ namespace Phonebook.Tests
         public void GetAllOnUserRepository()
         {
             //Arrange
-            UserRepository userRepository = new UserRepository(config);
+            UserRepository userRepository = new UserRepository(_config);
 
             //Act
             List<User> users = userRepository.GetAll().ToList();
@@ -151,7 +147,7 @@ namespace Phonebook.Tests
         public void GetOnUserRepository()
         {
             //Arrange
-            UserRepository userRepository = new UserRepository(config);
+            UserRepository userRepository = new UserRepository(_config);
 
             //Act
             User user = userRepository.Get(new Guid("7b8ceac1-9fb1-4e15-af4b-890b1f0c3ebf"));
@@ -166,7 +162,7 @@ namespace Phonebook.Tests
         public void CreateOnUserRepository()
         {
             //Arrange
-            UserRepository userRepository = new UserRepository(config);
+            UserRepository userRepository = new UserRepository(_config);
 
             var userToCreate = new User
             {
@@ -188,7 +184,7 @@ namespace Phonebook.Tests
         public void UpdateOnUserRepository()
         {
             //Arrange
-            UserRepository userRepository = new UserRepository(config);
+            UserRepository userRepository = new UserRepository(_config);
 
             var userToUpdate = _users[1];
             userToUpdate.Password = "Drowssap123";
@@ -206,7 +202,7 @@ namespace Phonebook.Tests
         public void DeleteOnUserRepository()
         {
             //Arrange
-            UserRepository userRepository = new UserRepository(config);
+            UserRepository userRepository = new UserRepository(_config);
 
             var userToDelete = _users[1];
 
