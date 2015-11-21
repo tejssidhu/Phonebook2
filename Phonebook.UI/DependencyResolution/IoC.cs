@@ -29,10 +29,12 @@ namespace Phonebook.UI.DependencyResolution {
                                         scan.AssembliesFromApplicationBaseDirectory();
                                         scan.WithDefaultConventions();
                                     });
-                            x.ForConcreteType<Configuration>().Configure.SetProperty(y => y.FilePaths = System.Web.Hosting.HostingEnvironment.MapPath(System.Web.HttpRuntime.AppDomainAppVirtualPath));
-                            x.ForConcreteType<Configuration>().Configure.SetProperty(y => y.UsersFileName = "Users.txt");
-                            x.ForConcreteType<Configuration>().Configure.SetProperty(y => y.ContactsFileName = "Contacts.txt");
-                            x.ForConcreteType<Configuration>().Configure.SetProperty(y => y.ContactNumbersFileName = "ContactNumbers.txt");
+                            x.ForConcreteType<Configuration>().Configure.SetProperty(y => {
+                                y.FilePaths = System.Web.Hosting.HostingEnvironment.MapPath(System.Web.HttpRuntime.AppDomainAppVirtualPath) + "Json\\"; 
+                                y.UsersFileName = "Users.txt";
+                                y.ContactsFileName = "Contacts.txt";
+                                y.ContactNumbersFileName = "ContactNumbers.txt";
+                            });
                         });
             return ObjectFactory.Container;
         }
