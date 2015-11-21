@@ -8,5 +8,11 @@
     <Setting Name="UserFile" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Users.txt</Value>
     </Setting>
+    <Setting Name="ContactFile" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Contacts.txt</Value>
+    </Setting>
+    <Setting Name="ContactNumbersFile" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ContactNumbers.txt</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

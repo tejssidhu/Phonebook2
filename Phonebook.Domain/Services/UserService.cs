@@ -10,9 +10,9 @@ namespace Phonebook.Domain.Services
 {
     public class UserService : IUserService
     {
-        private readonly IRepository<User> _userRepository;
+        private readonly IUserRepository _userRepository;
 
-        public UserService(IRepository<User> userRepository)
+        public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
@@ -50,6 +50,8 @@ namespace Phonebook.Domain.Services
                 throw new ObjectAlreadyExistException("User", "username");
             }
 
+            //TODO: more business logic to check sub collections
+
             _userRepository.Update(model);
         }
 
@@ -71,6 +73,5 @@ namespace Phonebook.Domain.Services
 
             return user;
         }
-
     }
 }

@@ -1,11 +1,13 @@
 ﻿using Phonebook.Domain.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Phonebook.Domain.Interfaces.Services
 {
-    public interface IUserService : IService<User>
+    public interface IContactNumberService : IService<ContactNumber>
     {
-        User Authenticate(string username, string password);
     }
 }

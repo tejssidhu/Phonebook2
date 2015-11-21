@@ -8,13 +8,13 @@ using Phonebook.Domain.Model;
 
 namespace Phonebook.Data.Repositories
 {
-    public class UserRepository : IRepository<User>
+    public class UserRepository : IUserRepository
     {
         private readonly PhonebookContext _phonebookContext;
 
         public UserRepository()
         {
-            _phonebookContext = new PhonebookContext(Settings.Default.FilePaths, Settings.Default.UserFile);
+            _phonebookContext = new PhonebookContext();
         }
 
         public void Dispose()
@@ -38,7 +38,7 @@ namespace Phonebook.Data.Repositories
 
             _phonebookContext.Users.Add(model);
 
-            _phonebookContext.SaveChanges();
+            _phonebookContext.SaveUserChanges();
 
             return model.Id;
         }
@@ -53,14 +53,15 @@ namespace Phonebook.Data.Repositories
                 user.Password = model.Password;
             }
 
-            _phonebookContext.SaveChanges();
+            _phonebookContext.SaveUserChanges();
         }
 
         public void Delete(Guid id)
         {
             _phonebookContext.Users.Remove(_phonebookContext.Users.FirstOrDefault(u => u.Id == id));
 
-            _phonebookContext.SaveChanges();
+            _phonebookContext.SaveUserChanges();
         }
+
     }
 }
