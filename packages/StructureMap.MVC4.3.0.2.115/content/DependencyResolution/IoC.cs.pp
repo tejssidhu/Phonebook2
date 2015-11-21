@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="IoC.cs" company="Web Advanced">
 // Copyright 2012 Web Advanced (www.webadvanced.com)
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,24 +15,19 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using StructureMap;
-using StructureMap.Graph;
-using Phonebook.Data.Context;
 
-namespace Phonebook.UI.DependencyResolution {
+using StructureMap.Graph;
+namespace $rootnamespace$.DependencyResolution {
     public static class IoC {
         public static IContainer Initialize() {
             ObjectFactory.Initialize(x =>
                         {
                             x.Scan(scan =>
                                     {
-                                        scan.AssembliesFromApplicationBaseDirectory();
+                                        scan.TheCallingAssembly();
                                         scan.WithDefaultConventions();
                                     });
-                            x.ForConcreteType<Configuration>().Configure.SetProperty(y => y.FilePaths = System.Web.Hosting.HostingEnvironment.MapPath(System.Web.HttpRuntime.AppDomainAppVirtualPath));
-                            x.ForConcreteType<Configuration>().Configure.SetProperty(y => y.UsersFileName = "Users.txt");
-                            x.ForConcreteType<Configuration>().Configure.SetProperty(y => y.ContactsFileName = "Contacts.txt");
-                            x.ForConcreteType<Configuration>().Configure.SetProperty(y => y.ContactNumbersFileName = "ContactNumbers.txt");
+            //                x.For<IExample>().Use<Example>();
                         });
             return ObjectFactory.Container;
         }

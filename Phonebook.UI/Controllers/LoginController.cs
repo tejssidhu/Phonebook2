@@ -1,15 +1,22 @@
-﻿using System.Web.Mvc;
+﻿using Phonebook.Domain.Interfaces.Services;
+using System.Web.Mvc;
 
 namespace Phonebook.UI.Controllers
 {
     public class LoginController : Controller
     {
-        //
-        // GET: /Login/
+        private readonly IUserService _userService;
+
+        public LoginController(IUserService userService)
+        {
+            _userService = userService;
+        }
 
         public ActionResult Index()
         {
-            return View();
+            var users = _userService.GetAll();
+
+            return View(users);
         }
 
     }
