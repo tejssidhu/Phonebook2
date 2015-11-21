@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Phonebook.Data.Properties {
+namespace Phonebook.Tests.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -20,6 +20,16 @@ namespace Phonebook.Data.Properties {
         public static Settings Default {
             get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\TejPersonalDocs\\Tejs Docs\\Projects\\Visual Studio\\Phonebook\\Phonebook.Tests\\Jso" +
+            "n")]
+        public string FilePaths {
+            get {
+                return ((string)(this["FilePaths"]));
             }
         }
     }

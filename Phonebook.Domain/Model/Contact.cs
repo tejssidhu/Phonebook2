@@ -18,5 +18,15 @@ namespace Phonebook.Domain.Model
             if (ContactNumbers == null)
                 ContactNumbers = new List<ContactNumber>();
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            Contact c = (Contact)obj;
+
+            return (UserId == c.UserId) && (Title == c.Title) && (Forename == c.Forename) && (Surname == c.Surname) && (Email == c.Email);
+        }
     }
 }

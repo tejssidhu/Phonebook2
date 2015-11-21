@@ -42,7 +42,7 @@ namespace Phonebook.Tests
         #endregion
 
         [TestMethod]
-        public void GetAll()
+        public void GetAllOnUserService()
         {
             //arrange
             var mockUserRepository = new Mock<IUserRepository>();
@@ -56,10 +56,12 @@ namespace Phonebook.Tests
 
             //assert
             CollectionAssert.AreEqual(_users, retUsers);
+
+            userService.Dispose();
         }
 
         [TestMethod]
-        public void Get()
+        public void GetOnUserService()
         {
             //arrange
             var mockUserRepository = new Mock<IUserRepository>();
@@ -74,11 +76,13 @@ namespace Phonebook.Tests
 
             //assert
             Assert.AreEqual(_user, retUser);
+
+            userService.Dispose();
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidPasswordException))]
-        public void AuthenticateWithInvalidPassword()
+        public void AuthenticateWithInvalidPasswordOnUserService()
         {
             //arrange
             var mockUserRepository = new Mock<IUserRepository>();
@@ -91,10 +95,12 @@ namespace Phonebook.Tests
             User retUser = userService.Authenticate(_user.Username, _user.Password + "WRONG");
 
             //assert - expect exception
+
+            userService.Dispose();
         }
 
         [TestMethod]
-        public void AuthenticateValidPassword()
+        public void AuthenticateValidPasswordOnUserService()
         {
             //arrange
             var mockUserRepository = new Mock<IUserRepository>();
@@ -108,11 +114,13 @@ namespace Phonebook.Tests
 
             //assert
             Assert.AreEqual(_user, retUser);
+
+            userService.Dispose();
         }
 
         [TestMethod]
         [ExpectedException(typeof(ObjectNotFoundException))]
-        public void AuthenticateWithNoExistentUser()
+        public void AuthenticateWithNoExistentUserOnUserService()
         {
             //arrange
             var mockUserRepository = new Mock<IUserRepository>();
@@ -125,11 +133,13 @@ namespace Phonebook.Tests
             User retUser = userService.Authenticate(_user.Username + "DOESNTEXIST", _user.Password);
 
             //assert - expect exception
+
+            userService.Dispose();
         }
 
         [TestMethod]
         [ExpectedException(typeof(ObjectAlreadyExistException))]
-        public void CreateWithExistingUser()
+        public void CreateWithExistingUserOnUserService()
         {
             //arrange
             var mockUserRepository = new Mock<IUserRepository>();
@@ -142,10 +152,12 @@ namespace Phonebook.Tests
             Guid id = userService.Create(_user);
 
             //assert - expect exception
+
+            userService.Dispose();
         }
 
         [TestMethod]
-        public void Create()
+        public void CreateOnUserService()
         {
             //arrange
             var mockUserRepository = new Mock<IUserRepository>();
@@ -166,11 +178,13 @@ namespace Phonebook.Tests
             //assert
             mockUserRepository.Verify(y => y.Create(It.IsAny<User>()));
             Assert.IsNotNull(id);
+
+            userService.Dispose();
         }
 
         [TestMethod]
         [ExpectedException(typeof(ObjectAlreadyExistException))]
-        public void UpdateToExistingUsername()
+        public void UpdateToExistingUsernameOnUserService()
         {
             //arrange
             var mockUserRepository = new Mock<IUserRepository>();
@@ -186,11 +200,12 @@ namespace Phonebook.Tests
             userService.Update(_user);
 
             //assert - expected exception
-            
+
+            userService.Dispose();            
         }
 
         [TestMethod]
-        public void Update()
+        public void UpdateOnUserService()
         {
             //arrange
             var mockUserRepository = new Mock<IUserRepository>();
@@ -207,10 +222,12 @@ namespace Phonebook.Tests
 
             //assert - expected exception
             mockUserRepository.Verify(y => y.Update(It.IsAny<User>()));
+
+            userService.Dispose();
         }
 
         [TestMethod]
-        public void Delete()
+        public void DeleteOnUserService()
         {
             //arrange
             var mockUserRepository = new Mock<IUserRepository>();
@@ -224,6 +241,8 @@ namespace Phonebook.Tests
 
             //assert - expected exception
             mockUserRepository.Verify(y => y.Delete(It.IsAny<Guid>()));
+
+            userService.Dispose();
         }
 
     }

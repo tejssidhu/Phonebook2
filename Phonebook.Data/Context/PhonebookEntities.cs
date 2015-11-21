@@ -18,13 +18,12 @@ namespace Phonebook.Data.Context
         public IList<Contact> Contacts { get; set; }
         public IList<ContactNumber> ContactNumbers { get; set; }
         
-        public PhonebookContext()
+        public PhonebookContext(Configuration config)
         {
-            //TODO: magic settings - need to remove and create configuration class that gets passed into constructor
-            var folderPath = Settings.Default.FilePaths;
-            var usersFileName = Settings.Default.UserFile;
-            var contactsFileName = Settings.Default.ContactFile;
-            var contactNumbersFileName = Settings.Default.ContactNumbersFile;
+            var folderPath = config.FilePaths;
+            var usersFileName = config.UsersFileName;
+            var contactsFileName = config.ContactsFileName;
+            var contactNumbersFileName = config.ContactNumbersFileName;
 
             if (!Directory.Exists(folderPath))
             {

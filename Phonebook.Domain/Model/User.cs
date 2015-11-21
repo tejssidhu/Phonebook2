@@ -16,5 +16,15 @@ namespace Phonebook.Domain.Model
             if (PhoneBook == null)
                 PhoneBook = new List<Contact>();
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            User u = (User)obj;
+
+            return (Username == u.Username) && (Password == u.Password);
+        }
     }
 }

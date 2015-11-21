@@ -57,12 +57,24 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ContactNumberServiceTests.cs" />
     <Compile Include="ContactServiceTests.cs" />
+    <Compile Include="ContatNumberRepositoryTests.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="ContactRepositoryTests.cs" />
     <Compile Include="UserRepositoryTests.cs" />
     <Compile Include="UserServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Phonebook.Common\Phonebook.Common.csproj">
+      <Project>{61ed0d02-7795-495b-a837-495f273df058}</Project>
+      <Name>Phonebook.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Phonebook.Data\Phonebook.Data.csproj">
       <Project>{482a85a5-2d8c-49fe-bef0-1a986c03e076}</Project>
       <Name>Phonebook.Data</Name>
@@ -73,7 +85,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Json\TestContactNumbers.txt" />
+    <Content Include="Json\TestContacts.txt" />
+    <Content Include="Json\TestUsers.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

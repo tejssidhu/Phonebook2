@@ -12,9 +12,9 @@ namespace Phonebook.Data.Repositories
     {
         private readonly PhonebookContext _phonebookContext;
 
-        public UserRepository()
+        public UserRepository(Configuration config)
         {
-            _phonebookContext = new PhonebookContext();
+            _phonebookContext = new PhonebookContext(config);
         }
 
         public void Dispose()

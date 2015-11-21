@@ -3,38 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using Phonebook.Domain.Exceptions;
 using Phonebook.Domain.Interfaces.Repositories;
 using Phonebook.Domain.Model;
 using Phonebook.Domain.Services;
-using Phonebook.Data.Context;
-using Phonebook.Data.Repositories;
+using Phonebook.Domain.Interfaces.Services;
 
 namespace Phonebook.Tests
 {
     [TestClass]
-    public class UserRepositoryTests
+    public class ContactServiceTests
     {
-        private Configuration config;
-        private List<User> _users;
-        private List<Contact> _contacts;
-        private List<ContactNumber> _contactNumbers;
-
         #region Test Initialise and Cleanup
+
+        private List<User> _users;
+        private User _user;
+        private Contact _contact;
+        private List<Contact> _contacts;
+
         [TestInitialize]
         public void TestUserServiceTests()
         {
-            config = new Configuration
-            {
-                FilePaths = AppDomain.CurrentDomain.BaseDirectory.Substring(0, (AppDomain.CurrentDomain.BaseDirectory.Length - 10)) + "\\Json",
-                UsersFileName = "TestUsers.txt",
-                ContactsFileName = "TestContacts.txt",
-                ContactNumbersFileName = "TestContactNumbers.txt"
-            };
+            _user = new User { Id = new Guid("26e31dde-4bcb-47d4-be80-958676c5cafd"), Password = "789", Username = "User789" };
 
             var user1 = new User { Id = new Guid("7b8ceac1-9fb1-4e15-af4b-890b1f0c3ebf"), Password = "123", Username = "User123" };
             var user2 = new User { Id = new Guid("5875412f-e8b8-493e-bd58-5df35083342c"), Password = "456", Username = "User456" };
-            var user3 = new User { Id = new Guid("26e31dde-4bcb-47d4-be80-958676c5cafd"), Password = "789", Username = "User789" };
             var user4 = new User { Id = new Guid("cef70a7a-3349-4368-85ed-66b8c274fad1"), Password = "p6NY0hg", Username = "mjenkins0" };
             var user5 = new User { Id = new Guid("71d8e924-7c58-4424-9e1b-b14eefa76abc"), Password = "5w7JhI42GLC", Username = "amartin1" };
             var user6 = new User { Id = new Guid("a051d1ca-a3c5-45d4-be60-5bc5256ce83e"), Password = "3NypkQZSe", Username = "vallen2" };
@@ -43,8 +37,10 @@ namespace Phonebook.Tests
             var user9 = new User { Id = new Guid("874c0bc3-6d9b-4dfa-b42c-8403fe1b281d"), Password = "7s7G9nai", Username = "gdiaz5" };
             var user10 = new User { Id = new Guid("16c6e264-0091-45f6-b9fd-02716d8d62dd"), Password = "3h7Vnh9rUpCl", Username = "cwheeler6" };
             var user11 = new User { Id = new Guid("0d1a6711-e9eb-418e-adda-47a62a7900c9"), Password = "g8KhtQpk", Username = "bparker7" };
-                      
-            var contact1 = new Contact { Id = new Guid("81c4763c-b225-4756-903a-750064167813"), UserId = new Guid("26e31dde-4bcb-47d4-be80-958676c5cafd"), Forename = "Theresa", Surname = "Reyes", Email = "treyes0@goo.gl", Title = "Dr" };
+
+            _users = new List<User> { user1, user2, _user, user4, user5, user6, user7, user8, user9, user10, user11 };
+
+            _contact = new Contact { Id = new Guid("81c4763c-b225-4756-903a-750064167813"), UserId = new Guid("26e31dde-4bcb-47d4-be80-958676c5cafd"), Forename = "Theresa", Surname = "Reyes", Email = "treyes0@goo.gl", Title = "Dr" };
             var contact2 = new Contact { Id = new Guid("cc772bf2-40bd-4b25-9e3a-0e80b1a63383"), UserId = new Guid("26e31dde-4bcb-47d4-be80-958676c5cafd"), Forename = "Pamela", Surname = "Wagner", Email = "pwagner1@ed.gov", Title = "Honorable" };
             var contact3 = new Contact { Id = new Guid("6e7ca25f-d438-4076-b2bf-180fbffe809e"), UserId = new Guid("26e31dde-4bcb-47d4-be80-958676c5cafd"), Forename = "Steve", Surname = "Tucker", Email = "stucker2@tuttocitta.it", Title = "Mrs" };
             var contact4 = new Contact { Id = new Guid("94669c7c-02f3-41a7-a8af-e6a3cee307bc"), UserId = new Guid("7b8ceac1-9fb1-4e15-af4b-890b1f0c3ebf"), Forename = "Sean", Surname = "Baker", Email = "sbaker3@noaa.gov", Title = "Honorable" };
@@ -98,127 +94,223 @@ namespace Phonebook.Tests
             var contact52 = new Contact { Id = new Guid("3f92501c-194b-4423-b780-64ecb4a11e2c"), UserId = new Guid("16c6e264-0091-45f6-b9fd-02716d8d62dd"), Forename = "Harry", Surname = "Gray", Email = "hgray1f@buzzfeed.com", Title = "Mr" };
             var contact53 = new Contact { Id = new Guid("9d0f4fba-d3a8-40e8-9662-f09f6ad7d341"), UserId = new Guid("0d1a6711-e9eb-418e-adda-47a62a7900c9"), Forename = "Kenneth", Surname = "Olson", Email = "kolson1g@gizmodo.com", Title = "Mrs" };
 
-            var contactNumber1 = new ContactNumber { Id = new Guid("9a005b3e-d9ec-4e08-aefa-589ab5e00bfa"), ContactId = new Guid("81c4763c-b225-4756-903a-750064167813"), Description = "Mobile", TelephoneNumber = "391714697203" };
-            var contactNumber2 = new ContactNumber { Id = new Guid("368b5e82-a019-4a4f-8f66-4bb670e6b769"), ContactId = new Guid("81c4763c-b225-4756-903a-750064167813"), Description = "Home", TelephoneNumber = "297724563901" };
-            var contactNumber3 = new ContactNumber { Id = new Guid("22b4f6e9-27c2-4636-b431-a37bdbc1b325"), ContactId = new Guid("cc772bf2-40bd-4b25-9e3a-0e80b1a63383"), Description = "Home", TelephoneNumber = "864785278888" };
-            var contactNumber4 = new ContactNumber { Id = new Guid("f5f162c8-33af-4ad2-b00d-1f618250401b"), ContactId = new Guid("cc772bf2-40bd-4b25-9e3a-0e80b1a63383"), Description = "Work", TelephoneNumber = "44167868359" };
-            var contactNumber5 = new ContactNumber { Id = new Guid("fda6127e-702b-4f32-9ec5-7f449deabf11"), ContactId = new Guid("6e7ca25f-d438-4076-b2bf-180fbffe809e"), Description = "Home", TelephoneNumber = "576800489823" };
-            var contactNumber6 = new ContactNumber { Id = new Guid("9d656825-9033-4be4-adef-a0dd9ebeef70"), ContactId = new Guid("6e7ca25f-d438-4076-b2bf-180fbffe809e"), Description = "Work", TelephoneNumber = "985888887522" };
-            var contactNumber7 = new ContactNumber { Id = new Guid("64aa5304-556f-4606-a118-03b43f46294b"), ContactId = new Guid("6e7ca25f-d438-4076-b2bf-180fbffe809e"), Description = "Mobile", TelephoneNumber = "188936967961" };
-            var contactNumber8 = new ContactNumber { Id = new Guid("c94df269-db84-45a7-9b2a-47fffdbc3399"), ContactId = new Guid("94669c7c-02f3-41a7-a8af-e6a3cee307bc"), Description = "Home", TelephoneNumber = "427370908494" };
-            var contactNumber9 = new ContactNumber { Id = new Guid("b74b006e-f985-47a6-932a-051e3437e31f"), ContactId = new Guid("94669c7c-02f3-41a7-a8af-e6a3cee307bc"), Description = "Mobile", TelephoneNumber = "165328050436" };
-            var contactNumber10 = new ContactNumber { Id = new Guid("6222209a-ce18-4d88-a7a5-27c8bd0ef92f"), ContactId = new Guid("58c1eb1e-1513-4f19-97f3-d8571f97115f"), Description = "Mobile", TelephoneNumber = "381792056593" };
-            var contactNumber11 = new ContactNumber { Id = new Guid("47f7f4e8-593c-4f6d-b1a5-1725e578ee86"), ContactId = new Guid("58c1eb1e-1513-4f19-97f3-d8571f97115f"), Description = "Home", TelephoneNumber = "632196085018" };
-            var contactNumber12 = new ContactNumber { Id = new Guid("6ce58c67-b584-460f-8d5b-20cce37a4e90"), ContactId = new Guid("e3ee2f2b-3ace-4fd4-8ca7-7d6960f7a9fb"), Description = "Mobile", TelephoneNumber = "924308316065" };
-            var contactNumber13 = new ContactNumber { Id = new Guid("8e9e8fe1-f9bf-482c-b1bd-77c1e472e683"), ContactId = new Guid("e3ee2f2b-3ace-4fd4-8ca7-7d6960f7a9fb"), Description = "Home", TelephoneNumber = "962474029779" };
-            var contactNumber14 = new ContactNumber { Id = new Guid("6fcceb1d-f27c-401f-bd95-f3519be6d6d4"), ContactId = new Guid("e3ee2f2b-3ace-4fd4-8ca7-7d6960f7a9fb"), Description = "Work", TelephoneNumber = "412115311830" };
-            var contactNumber15 = new ContactNumber { Id = new Guid("d8fc029d-8062-4cc4-ac29-e4339d1b48d3"), ContactId = new Guid("2ae69661-72c6-4e33-a6ec-1ca93152fa80"), Description = "Home", TelephoneNumber = "962216940411" };
-            var contactNumber16 = new ContactNumber { Id = new Guid("0be9339f-706d-4e34-9938-afc76c7e746f"), ContactId = new Guid("2ae69661-72c6-4e33-a6ec-1ca93152fa80"), Description = "Mobile", TelephoneNumber = "641533924552" };
+            _user.PhoneBook = new List<Contact> { _contact, contact2, contact3 };
+            user1.PhoneBook = new List<Contact> { contact4, contact5, contact6 };
+            user2.PhoneBook = new List<Contact> { contact7, contact8, contact9, contact10 };
+            user4.PhoneBook = new List<Contact> { contact11, contact12 };
+            user5.PhoneBook = new List<Contact> { contact13, contact14, contact15, contact16, contact17, contact18, contact19 };
+            user7.PhoneBook = new List<Contact> { contact20, contact21, contact22, contact23, contact24, contact25, contact26, contact27, contact28, contact29, contact30 };
+            user8.PhoneBook = new List<Contact> { contact31, contact32 };
+            user9.PhoneBook = new List<Contact> { contact33, contact34, contact35, contact36, contact37, contact38, contact39, contact40, contact41, contact42, contact43, contact44, contact45 };
+            user10.PhoneBook = new List<Contact> { contact46, contact47, contact48, contact49, contact50, contact51, contact52 };
+            user11.PhoneBook = new List<Contact> { contact53 };
 
-            _users = new List<User> { user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11 };
-            _contacts = new List<Contact> { contact1, contact2, contact3, contact4, contact5, contact6, contact7, contact8, contact9, contact10, contact11, contact12, contact13, contact14, contact15, contact16, contact17, contact18, contact19, contact20, contact21, contact22, contact23, contact24, contact25, contact26, contact27, contact28, contact29, contact31, contact32, contact33, contact34, contact35, contact36, contact37, contact38, contact39, contact40, contact41, contact42, contact43, contact44, contact45, contact46, contact47, contact48, contact49, contact50, contact51, contact52, contact53 };
-            _contactNumbers = new List<ContactNumber> { contactNumber1, contactNumber2, contactNumber3, contactNumber4, contactNumber5, contactNumber6, contactNumber7, contactNumber8, contactNumber9, contactNumber10, contactNumber11, contactNumber12, contactNumber13, contactNumber14, contactNumber15, contactNumber16 };
-
-            PhonebookContext pbContext = new PhonebookContext(config);
-
-            pbContext.Users = _users;
-            pbContext.Contacts = _contacts;
-            pbContext.ContactNumbers = _contactNumbers;
-
-            pbContext.SaveUserChanges();
-            pbContext.SaveContactChanges();
-            pbContext.SaveContactNumberChanges();
-
-            pbContext.Dispose();
+            _contacts = new List<Contact> { _contact, contact2, contact3, contact4, contact5, contact6, contact7, contact8, contact9, contact10, contact11, contact12, contact13, contact14, contact15, contact16, contact17, contact18, contact19, contact20, contact21, contact22, contact23, contact24, contact25, contact26, contact27, contact28, contact29, contact31, contact32, contact33, contact34, contact35, contact36, contact37, contact38, contact39, contact40, contact41, contact42, contact43, contact44, contact45, contact46, contact47, contact48, contact49, contact50, contact51, contact52, contact53 };
         }
-
         #endregion
 
         [TestMethod]
-        public void GetAllOnUserRepository()
+        [ExpectedException(typeof(ObjectAlreadyExistException))]
+        public void CreateContactForUserWithEmailAddressOfExistingContactOnContactService()
         {
-            //Arrange
-            UserRepository userRepository = new UserRepository(config);
+            //arrange
+            var mockContactRepository = new Mock<IContactRepository>();
+            var mockUserService = new Mock<IUserService>();
 
-            //Act
-            List<User> users = userRepository.GetAll().ToList();
-
-            //Assert
-            CollectionAssert.AreEqual(_users, users);
-        }
-
-        [TestMethod]
-        public void GetOnUserRepository()
-        {
-            //Arrange
-            UserRepository userRepository = new UserRepository(config);
-
-            //Act
-            User user = userRepository.Get(new Guid("7b8ceac1-9fb1-4e15-af4b-890b1f0c3ebf"));
-
-            //Assert
-            Assert.AreEqual(_users[0], user);
-
-            userRepository.Dispose();
-        }
-
-        [TestMethod]
-        public void CreateOnUserRepository()
-        {
-            //Arrange
-            UserRepository userRepository = new UserRepository(config);
-
-            var userToCreate = new User
+            Contact contactToCreate = new Contact
             {
-                Username = "Tej.Sidhu",
-                Password = "Password123"
+                UserId = new Guid("26e31dde-4bcb-47d4-be80-958676c5cafd"),
+                Title = "Dr",
+                Email = "treyes0@goo.gl",
+                Forename = "T",
+                Surname = "Reyes"
             };
 
-            //Act
-            Guid id = userRepository.Create(userToCreate);
+            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
+            mockUserService.Setup(x => x.Get(It.IsAny<Guid>())).Returns(_user);
 
-            User user = userRepository.Get(id);
+            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
 
-            //Assert
-            Assert.AreEqual(user, userToCreate);
-            Assert.IsNotNull(id);
+            //act
+            Guid contactId = contactService.Create(contactToCreate);
+
+            //assert - expect excpetion
+            contactService.Dispose();
         }
 
         [TestMethod]
-        public void UpdateOnUserRepository()
+        [ExpectedException(typeof(ObjectNotFoundException))]
+        public void CreateNewContactForNoneExistentUserOnContactService()
         {
-            //Arrange
-            UserRepository userRepository = new UserRepository(config);
+            //arrange
+            var mockContactRepository = new Mock<IContactRepository>();
+            var mockUserService = new Mock<IUserService>();
 
-            var userToUpdate = _users[1];
-            userToUpdate.Password = "Drowssap123";
+            var contactToCreate = new Contact { UserId = new Guid("318274f0-573c-416b-aa4b-b68b83ec8427"), Forename = "Carlos", Surname = "Daniels", Email = "cdaniels1h@tripod.com", Title = "Mr" };
 
-            //Act
-            userRepository.Update(userToUpdate);
+            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
+            mockUserService.Setup(x => x.Get(It.IsAny<Guid>())).Returns(() => null);
 
-            User user = userRepository.Get(userToUpdate.Id);
+            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
 
-            //Assert
-            Assert.AreEqual(user, userToUpdate);
+            //act
+            Guid contactId = contactService.Create(contactToCreate);
+
+            //assert
+
+            contactService.Dispose();
         }
 
         [TestMethod]
-        public void DeleteOnUserRepository()
+        public void CreateNewContactOnContactService()
         {
-            //Arrange
-            UserRepository userRepository = new UserRepository(config);
+            //arrange
+            var mockContactRepository = new Mock<IContactRepository>();
+            var mockUserService = new Mock<IUserService>();
 
-            var userToDelete = _users[1];
+            var contactToCreate = new Contact { UserId = new Guid("0d1a6711-e9eb-418e-adda-47a62a7900c9"), Forename = "Carlos", Surname = "Daniels", Email = "cdaniels1h@tripod.com", Title = "Mr" };
 
-            //Act
-            userRepository.Delete(userToDelete.Id);
+            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
+            mockUserService.Setup(x => x.Get(It.IsAny<Guid>())).Returns(_users[10]);
 
-            User user = userRepository.Get(userToDelete.Id);
+            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
 
-            //Assert
-            Assert.IsNull(user);
+            //act
+            Guid contactId = contactService.Create(contactToCreate);
+
+            //assert
+            mockContactRepository.Verify(y => y.Create(It.IsAny<Contact>()));
+            Assert.IsNotNull(contactId);
+
+            contactService.Dispose();
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(ObjectAlreadyExistException))]
+        public void UpdateContactToExistingContactsEmailOnContactService()
+        {
+            //arrange
+            var mockContactRepository = new Mock<IContactRepository>();
+            var mockUserService = new Mock<IUserService>();
+
+            var contactToUpdate = _user.PhoneBook[0];
+
+            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
+
+            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
+
+            //set email to that of another contact in that users Phonebook
+            contactToUpdate.Email = _user.PhoneBook[1].Email;
+
+            //act
+            contactService.Update(contactToUpdate);
+
+            //assert - expected exception
+
+            contactService.Dispose();
+        }
+
+        [TestMethod]
+        public void UpdateContactOnContactService()
+        {
+            //arrange
+            var mockContactRepository = new Mock<IContactRepository>();
+            var mockUserService = new Mock<IUserService>();
+
+            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
+
+            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
+
+            //set username to that of another user
+            _contact.Email = _contact.Email + "WITHUPDATE";
+
+            //act
+            contactService.Update(_contact);
+
+            //assert
+            mockContactRepository.Verify(y => y.Update(It.IsAny<Contact>()));
+
+            contactService.Dispose();
+        }
+
+        [TestMethod]
+        public void DeleteContactOnContactService()
+        {
+            //arrange
+            var mockContactRepository = new Mock<IContactRepository>();
+            var mockUserService = new Mock<IUserService>();
+
+            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
+
+            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
+
+            //act
+            contactService.Delete(_contact.Id);
+
+            //assert - expected exception
+            mockContactRepository.Verify(y => y.Delete(It.IsAny<Guid>()));
+
+            contactService.Dispose();
+        }
+
+        [TestMethod]
+        public void GetAllContactsByUserIdOnContactService()
+        {
+            //arrange
+            var mockContactRepository = new Mock<IContactRepository>();
+            var mockUserService = new Mock<IUserService>();
+
+            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
+
+            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
+
+            //act
+            List<Contact> retContacts = contactService.GetAllByUserId(_user.Id).ToList();
+
+            //assert
+            CollectionAssert.AreEqual(_user.PhoneBook, retContacts);
+
+            contactService.Dispose();
+        }
+
+        [TestMethod]
+        public void SearchContactsByEmailOnContactService()
+        {
+            //arrange
+            var mockContactRepository = new Mock<IContactRepository>();
+            var mockUserService = new Mock<IUserService>();
+
+            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
+
+            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
+
+            //act
+            List<Contact> retContacts = contactService.SearchContactsByEmail(_user.Id, "treyes0@").ToList();
+
+            //assert
+            CollectionAssert.AreEqual(_user.PhoneBook.Where(x => x.Email.Contains("treyes0@")).ToList(), retContacts);
+
+            contactService.Dispose();
+        }
+
+        [TestMethod]
+        public void SearchContactsByNameOnContactService()
+        {
+            //arrange
+            var mockContactRepository = new Mock<IContactRepository>();
+            var mockUserService = new Mock<IUserService>();
+
+            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
+
+            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
+
+            //act
+            List<Contact> retContacts = contactService.SearchContactsByName(_user.Id, "S", "Tucker").ToList();
+
+            //assert
+            CollectionAssert.AreEqual(_user.PhoneBook.Where(x => x.Forename.Contains("S") && x.Surname.Contains("Tucker")).ToList(), retContacts);
+
+            contactService.Dispose();
+        }
     }
-
 }

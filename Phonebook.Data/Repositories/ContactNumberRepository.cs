@@ -12,34 +12,50 @@ namespace Phonebook.Data.Repositories
     {
         private readonly PhonebookContext _phonebookContext;
 
-        public ContactNumberRepository()
+        public ContactNumberRepository(Configuration config)
         {
-            _phonebookContext = new PhonebookContext();
+            _phonebookContext = new PhonebookContext(config);
         }
     
         public IList<Domain.Model.ContactNumber> GetAll()
         {
- 	        throw new NotImplementedException();
+            return _phonebookContext.ContactNumbers;
         }
 
         public Domain.Model.ContactNumber Get(Guid id)
         {
- 	        throw new NotImplementedException();
+            return _phonebookContext.ContactNumbers.FirstOrDefault(cn => cn.Id == id);
         }
 
         public Guid Create(Domain.Model.ContactNumber model)
         {
- 	        throw new NotImplementedException();
+            model.Id = Guid.NewGuid();
+
+            _phonebookContext.ContactNumbers.Add(model);
+
+            _phonebookContext.SaveContactNumberChanges();
+
+            return model.Id;
         }
 
         public void Update(Domain.Model.ContactNumber model)
         {
- 	        throw new NotImplementedException();
+            var contactNumber = Get(model.Id);
+
+            if (contactNumber != null)
+            {
+                contactNumber.Description = model.Description;
+                contactNumber.TelephoneNumber = model.TelephoneNumber;
+            }
+
+            _phonebookContext.SaveContactNumberChanges();
         }
 
         public void Delete(Guid id)
         {
- 	        throw new NotImplementedException();
+            _phonebookContext.ContactNumbers.Remove(_phonebookContext.ContactNumbers.FirstOrDefault(cn => cn.Id == id));
+
+            _phonebookContext.SaveContactNumberChanges();
         }
 
         public void Dispose()

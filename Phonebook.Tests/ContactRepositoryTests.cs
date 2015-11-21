@@ -1,19 +1,15 @@
 ﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Phonebook.Data.Context;
+using Phonebook.Domain.Model;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Phonebook.Domain.Exceptions;
-using Phonebook.Domain.Interfaces.Repositories;
-using Phonebook.Domain.Model;
-using Phonebook.Domain.Services;
-using Phonebook.Data.Context;
 using Phonebook.Data.Repositories;
 
 namespace Phonebook.Tests
 {
     [TestClass]
-    public class UserRepositoryTests
+    public class ContactRepositoryTests
     {
         private Configuration config;
         private List<User> _users;
@@ -43,7 +39,7 @@ namespace Phonebook.Tests
             var user9 = new User { Id = new Guid("874c0bc3-6d9b-4dfa-b42c-8403fe1b281d"), Password = "7s7G9nai", Username = "gdiaz5" };
             var user10 = new User { Id = new Guid("16c6e264-0091-45f6-b9fd-02716d8d62dd"), Password = "3h7Vnh9rUpCl", Username = "cwheeler6" };
             var user11 = new User { Id = new Guid("0d1a6711-e9eb-418e-adda-47a62a7900c9"), Password = "g8KhtQpk", Username = "bparker7" };
-                      
+
             var contact1 = new Contact { Id = new Guid("81c4763c-b225-4756-903a-750064167813"), UserId = new Guid("26e31dde-4bcb-47d4-be80-958676c5cafd"), Forename = "Theresa", Surname = "Reyes", Email = "treyes0@goo.gl", Title = "Dr" };
             var contact2 = new Contact { Id = new Guid("cc772bf2-40bd-4b25-9e3a-0e80b1a63383"), UserId = new Guid("26e31dde-4bcb-47d4-be80-958676c5cafd"), Forename = "Pamela", Surname = "Wagner", Email = "pwagner1@ed.gov", Title = "Honorable" };
             var contact3 = new Contact { Id = new Guid("6e7ca25f-d438-4076-b2bf-180fbffe809e"), UserId = new Guid("26e31dde-4bcb-47d4-be80-958676c5cafd"), Forename = "Steve", Surname = "Tucker", Email = "stucker2@tuttocitta.it", Title = "Mrs" };
@@ -135,90 +131,101 @@ namespace Phonebook.Tests
         #endregion
 
         [TestMethod]
-        public void GetAllOnUserRepository()
+        public void GetAllOnContactRepository()
         {
             //Arrange
-            UserRepository userRepository = new UserRepository(config);
+            ContactRepository contactRepository = new ContactRepository(config);
 
             //Act
-            List<User> users = userRepository.GetAll().ToList();
+            List<Contact> contacts = contactRepository.GetAll().ToList();
 
             //Assert
-            CollectionAssert.AreEqual(_users, users);
+            CollectionAssert.AreEqual(_contacts, contacts);
+
+            contactRepository.Dispose();
         }
 
         [TestMethod]
-        public void GetOnUserRepository()
+        public void GetOnContactRepository()
         {
             //Arrange
-            UserRepository userRepository = new UserRepository(config);
+            ContactRepository contactRepository = new ContactRepository(config);
 
             //Act
-            User user = userRepository.Get(new Guid("7b8ceac1-9fb1-4e15-af4b-890b1f0c3ebf"));
+            Contact contact = contactRepository.Get(new Guid("81c4763c-b225-4756-903a-750064167813"));
 
             //Assert
-            Assert.AreEqual(_users[0], user);
+            Assert.AreEqual(_contacts[0], contact);
 
-            userRepository.Dispose();
+            contactRepository.Dispose();
         }
 
         [TestMethod]
-        public void CreateOnUserRepository()
+        public void CreateOnContactRepository()
         {
             //Arrange
-            UserRepository userRepository = new UserRepository(config);
+            ContactRepository contactRepository = new ContactRepository(config);
 
-            var userToCreate = new User
+            var contactToCreate = new Contact
             {
-                Username = "Tej.Sidhu",
-                Password = "Password123"
+                UserId = _users[0].Id,
+                Title = "Mrs",
+                Forename = "Maggie",
+                Surname = "Thatcher",
+                Email = "Maggie.Thatcher@goo.gl"
             };
 
             //Act
-            Guid id = userRepository.Create(userToCreate);
+            Guid id = contactRepository.Create(contactToCreate);
 
-            User user = userRepository.Get(id);
+            Contact contact = contactRepository.Get(id);
 
             //Assert
-            Assert.AreEqual(user, userToCreate);
+            Assert.AreEqual(contact, contactToCreate);
             Assert.IsNotNull(id);
+
+            contactRepository.Dispose();
         }
 
         [TestMethod]
-        public void UpdateOnUserRepository()
+        public void UpdateOnContactRepository()
         {
             //Arrange
-            UserRepository userRepository = new UserRepository(config);
+            ContactRepository contactRepository = new ContactRepository(config);
 
-            var userToUpdate = _users[1];
-            userToUpdate.Password = "Drowssap123";
+            var contactToUpdate = _contacts[3];
+            contactToUpdate.UserId = new Guid("7b8ceac1-9fb1-4e15-af4b-890b1f0c3ebf");
+            contactToUpdate.Forename = "Sean" + "Updated";
+            contactToUpdate.Surname = "Baker" + "Updated";
+            contactToUpdate.Email = "sbaker3@noaa.gov" + "Updated";
+            contactToUpdate.Title = "Honorable" + "Updated";
 
             //Act
-            userRepository.Update(userToUpdate);
+            contactRepository.Update(contactToUpdate);
 
-            User user = userRepository.Get(userToUpdate.Id);
+            Contact contact = contactRepository.Get(contactToUpdate.Id);
 
             //Assert
-            Assert.AreEqual(user, userToUpdate);
+            Assert.AreEqual(contact, contactToUpdate);
+
+            contactRepository.Dispose();
         }
 
         [TestMethod]
-        public void DeleteOnUserRepository()
+        public void DeleteOnContactRepository()
         {
             //Arrange
-            UserRepository userRepository = new UserRepository(config);
+            ContactRepository contactRepository = new ContactRepository(config);
 
-            var userToDelete = _users[1];
+            var contactToDelete = _contacts[4];
 
             //Act
-            userRepository.Delete(userToDelete.Id);
+            contactRepository.Delete(contactToDelete.Id);
 
-            User user = userRepository.Get(userToDelete.Id);
+            Contact contact = contactRepository.Get(contactToDelete.Id);
 
             //Assert
-            Assert.IsNull(user);
+            Assert.IsNull(contact);
         }
-
     }
-
 }

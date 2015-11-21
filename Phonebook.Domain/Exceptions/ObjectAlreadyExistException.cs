@@ -10,6 +10,7 @@ namespace Phonebook.Domain.Exceptions
         }
 
         public ObjectAlreadyExistException(string objectName, string uniquePropertyName)
+            : base(objectName + " with this " + uniquePropertyName + " already exists")
         {
             
         }
