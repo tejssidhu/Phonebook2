@@ -52,7 +52,7 @@ namespace Phonebook.Domain.Services
 
             _contactNumberRepository.Update(model);
         }
-
+        
         public void Delete(Guid id)
         {
             _contactNumberRepository.Delete(id);
@@ -61,6 +61,11 @@ namespace Phonebook.Domain.Services
         public void Dispose()
         {
             _contactNumberRepository.Dispose();
+        }
+
+        public IList<Model.ContactNumber> GetAllByContactId(Guid contactId)
+        {
+            return _contactNumberRepository.GetAll().Where(x => x.ContactId == contactId).ToList();
         }
     }
 }

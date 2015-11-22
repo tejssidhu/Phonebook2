@@ -6,6 +6,7 @@ using Phonebook.Domain.Interfaces.Services;
 using Phonebook.Domain.Model;
 using Phonebook.Domain.Services;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Phonebook.Tests
@@ -139,7 +140,7 @@ namespace Phonebook.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ObjectAlreadyExistException))]
-        public void CreateContactNumberForContactWithTelephoneNumberOfExistingContactNumberOnContactService()
+        public void CreateContactNumberForContactWithTelephoneNumberOfExistingContactNumberOnContactNumberService()
         {
             //arrange
             var mockContactNumberRepository = new Mock<IContactNumberRepository>();
@@ -167,7 +168,7 @@ namespace Phonebook.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ObjectNotFoundException))]
-        public void CreateNewContactNumberForNoneExistentContactOnContactService()
+        public void CreateNewContactNumberForNoneExistentContactOnContactNumberService()
         {
             //arrange
             var mockContactNumberRepository = new Mock<IContactNumberRepository>();
@@ -194,7 +195,7 @@ namespace Phonebook.Tests
         }
 
         [TestMethod]
-        public void CreateNewContactOnContactService()
+        public void CreateNewContactOnContactNumberService()
         {
             //arrange
             var mockContactNumberRepository = new Mock<IContactNumberRepository>();
@@ -218,8 +219,28 @@ namespace Phonebook.Tests
         }
 
         [TestMethod]
+        public void GetAllContactNumbersByContactIdOnContactNumberService()
+        {
+            //arrange
+            var mockContactNumberRepository = new Mock<IContactNumberRepository>();
+            var mockContactService = new Mock<IContactService>();
+
+            mockContactNumberRepository.Setup(x => x.GetAll()).Returns(_contactNumbers);
+
+            ContactNumberService contactNumberService = new ContactNumberService(mockContactNumberRepository.Object, mockContactService.Object);
+
+            //act
+            List<ContactNumber> retContactNumbers = contactNumberService.GetAllByContactId(_contact.Id).ToList();
+
+            //assert
+            CollectionAssert.AreEqual(_contact.ContactNumbers, retContactNumbers);
+
+            contactNumberService.Dispose();
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ObjectAlreadyExistException))]
-        public void UpdateContactNumberToExistingContactNumbersTelephoneNumberOnContactService()
+        public void UpdateContactNumberToExistingContactNumbersTelephoneNumberOnContactNumberService()
         {
             //arrange
             var mockContactNumberRepository = new Mock<IContactNumberRepository>();
@@ -243,7 +264,7 @@ namespace Phonebook.Tests
         }
 
         [TestMethod]
-        public void UpdateContactNumberOnContactService()
+        public void UpdateContactNumberOnContactNumberService()
         {
             //arrange
             var mockContactNumberRepository = new Mock<IContactNumberRepository>();
@@ -268,7 +289,7 @@ namespace Phonebook.Tests
         }
 
         [TestMethod]
-        public void DeleteContactNumberOnContactService()
+        public void DeleteContactNumberOnContactNumberService()
         {
             //arrange
             var mockContactNumberRepository = new Mock<IContactNumberRepository>();

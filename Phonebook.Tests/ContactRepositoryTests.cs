@@ -216,7 +216,7 @@ namespace Phonebook.Tests
         {
             //Arrange
             ContactRepository contactRepository = new ContactRepository(_config);
-
+            
             var contactToDelete = _contacts[4];
 
             //Act
@@ -226,6 +226,12 @@ namespace Phonebook.Tests
 
             //Assert
             Assert.IsNull(contact);
+
+            //Assert all contact Numbers for this contact have also been removed
+            ContactNumberRepository contactNumberRepository = new ContactNumberRepository(_config);
+            var contactNumbers = contactNumberRepository.GetAll().Where(cn => cn.ContactId == contactToDelete.Id).ToList();
+
+            Assert.AreEqual(0, contactNumbers.Count);
         }
     }
 }

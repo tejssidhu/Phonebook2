@@ -62,6 +62,7 @@ namespace Phonebook.Domain.Services
         public void Dispose()
         {
             _contactRepository.Dispose();
+            _userService.Dispose();
         }
 
         public IList<Contact> SearchContactsByName(Guid userId, string forename, string surname)

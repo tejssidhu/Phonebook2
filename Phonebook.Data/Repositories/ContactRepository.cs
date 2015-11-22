@@ -53,6 +53,14 @@ namespace Phonebook.Data.Repositories
 
         public void Delete(Guid id)
         {
+            var contactNumbers = _phonebookContext.ContactNumbers.Where(cn => cn.ContactId == id).ToList();
+
+            foreach (var contactNumber in contactNumbers)
+            {
+                _phonebookContext.ContactNumbers.Remove(contactNumber);
+            }
+            _phonebookContext.SaveContactNumberChanges();
+
             _phonebookContext.Contacts.Remove(_phonebookContext.Contacts.FirstOrDefault(c => c.Id == id));
 
             _phonebookContext.SaveContactChanges();
