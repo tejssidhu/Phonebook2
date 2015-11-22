@@ -4,58 +4,70 @@
     ViewBag.Title = "Manage Contact";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<p>&nbsp;</p>
+<div class="page-header"><h2>@(Model.Id == Guid.Empty ? "Add New Contact" : "Edit Contact")</h2></div>
 
-<h2>@(Model.Id == Guid.Empty ? "Add New Contact" : "Edit Contact")</h2>
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        @using (Html.BeginForm("ManageContact", "Contact", null, FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+            <div class="form-group">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.UserId)
 
-@using (Html.BeginForm()) {
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true)
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Title, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-5">
+                        @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.ValidationMessageFor(model => model.Title)
+                    </div>
+                </div>
 
-    <fieldset>
-        <legend>Contact</legend>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Forename, new { @class = "col-md-2 control-label" })
+                   <div class="col-md-5">
+                        @Html.TextBoxFor(model => model.Forename, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.ValidationMessageFor(model => model.Forename)
+                    </div>
+                </div>
 
-        @Html.HiddenFor(model => model.Id)
-        @Html.HiddenFor(model => model.UserId)
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Surname, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-5">
+                        @Html.TextBoxFor(model => model.Surname, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.ValidationMessageFor(model => model.Surname)
+                    </div>
+                </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Title)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Title)
-            @Html.ValidationMessageFor(model => model.Title)
-        </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Email, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-5">
+                        @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.ValidationMessageFor(model => model.Email)
+                    </div>
+                </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Forename)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Forename)
-            @Html.ValidationMessageFor(model => model.Forename)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Surname)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Surname)
-            @Html.ValidationMessageFor(model => model.Surname)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Email)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Email)
-            @Html.ValidationMessageFor(model => model.Email)
-        </div>
-
-        <p>
-            <input type="submit" value="Save" />
-        </p>
-
-        @Html.ActionLink("Cancel", "Index", "Contact", new { UserId = Model.UserId }, new { @class = "cancelButton" })
-    </fieldset>
-}
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-8">
+                        <button type="submit" class="btn btn-primary">Save</button> 
+                        @Html.ActionLink("Cancel", "Index", "Contact", new { UserId = Model.UserId }, new { @class = "btn btn btn-default" })
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

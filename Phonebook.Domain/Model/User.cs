@@ -1,14 +1,24 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Phonebook.Domain.Model
 {
     public class User
     {
+        [Required]
         public Guid Id { get; set; }
+        
+        [Required]
+        [MaxLength(100)]
         public string Username { get; set; }
+        
+        [Required]
+        [MaxLength(100)]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
+        
         public List<Contact> PhoneBook { get; set; }
 
         public User()

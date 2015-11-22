@@ -311,5 +311,25 @@ namespace Phonebook.Tests
 
             contactService.Dispose();
         }
+
+        [TestMethod]
+        public void SearchContactsByNameAndEmailOnContactService()
+        {
+            //arrange
+            var mockContactRepository = new Mock<IContactRepository>();
+            var mockUserService = new Mock<IUserService>();
+
+            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
+
+            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
+
+            //act
+            List<Contact> retContacts = contactService.Search(_user.Id, "Tuc", "tuttocitta").ToList();
+
+            //assert
+            CollectionAssert.AreEqual(_user.PhoneBook.Where(x => (x.Forename + " " + x.Surname).Contains("Tucker") && x.Email.Contains("tuttocitta")).ToList(), retContacts);
+
+            contactService.Dispose();
+        }
     }
 }

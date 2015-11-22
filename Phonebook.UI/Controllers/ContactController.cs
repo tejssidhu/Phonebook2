@@ -1,6 +1,7 @@
 ﻿using Phonebook.Domain.Exceptions;
 using Phonebook.Domain.Interfaces.Services;
 using Phonebook.Domain.Model;
+using Phonebook.UI.ViewModels;
 using System;
 using System.Web.Mvc;
 
@@ -22,6 +23,14 @@ namespace Phonebook.UI.Controllers
             ViewBag.UserId = userId;
 
             return View(contacts);
+        }
+
+        public ActionResult Search(SearchViewModel viewModel)
+        {
+            var contacts = _contactService.Search(viewModel.UserId, viewModel.Name, viewModel.Email);
+            ViewBag.UserId = viewModel.UserId;
+
+            return View("Index", contacts);
         }
 
         public ActionResult ManageContact(Guid contactId, Guid userId)

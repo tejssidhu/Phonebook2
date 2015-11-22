@@ -1,11 +1,24 @@
 ﻿using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
 namespace Phonebook.Domain.Model
 {
     public class ContactNumber
     {
+        [Required]
         public Guid Id { get; set; }
+        
+        [Required]
         public Guid ContactId { get; set; }
+
+        [Required]
+        [MaxLength(20)]
         public string Description { get; set; }
+
+        [Required]
+        [MaxLength(20)]
+        [DisplayName("Telephone Number")]
         public string TelephoneNumber { get; set; }
 
         public override bool Equals(object obj)

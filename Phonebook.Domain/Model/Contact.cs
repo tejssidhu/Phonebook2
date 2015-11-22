@@ -1,16 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Phonebook.Domain.Model
 {
     public class Contact
     {
+        [Required]
         public Guid Id { get; set; }
+        [Required]
         public Guid UserId { get; set; }
+
+        [MaxLength(100)]
         public string Title { get; set; }
+        
+        [MaxLength(100)]
         public string Forename { get; set; }
+
+        [MaxLength(100)]
         public string Surname { get; set; }
+        
+        [Required]
+        [EmailAddress]
+        [DataType(DataType.EmailAddress)]
+        [MaxLength(100)]
         public string Email { get; set; }
+
         public List<ContactNumber> ContactNumbers { get; set; }
 
         public Contact()

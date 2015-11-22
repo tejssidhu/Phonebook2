@@ -79,5 +79,12 @@ namespace Phonebook.Domain.Services
         {
             return _contactRepository.GetAll().Where(x => x.UserId == userId).ToList();
         }
+
+        public IList<Contact> Search(Guid userId, string name, string email)
+        {
+            name = String.IsNullOrEmpty(name) ? "" : name;
+            email = String.IsNullOrEmpty(email) ? "" : email;
+            return _contactRepository.GetAll().Where(x => x.UserId == userId && (x.Forename + " " + x.Surname).Contains(name) && x.Email.Contains(email)).ToList();
+        }
     }
 }

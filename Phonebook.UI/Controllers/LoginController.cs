@@ -66,5 +66,12 @@ namespace Phonebook.UI.Controllers
 
 
         }
+
+        public ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+
+            return RedirectToAction("Index");
+        }
     }
 }

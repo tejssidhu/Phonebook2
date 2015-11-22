@@ -9,6 +9,7 @@ namespace Phonebook.Domain.Interfaces.Services
 {
     public interface IContactService : IService<Contact>
     {
+        IList<Contact> Search(Guid userId, string name, string email);
         IList<Contact> GetAllByUserId(Guid userId);
         IList<Contact> SearchContactsByName(Guid userId, string forename, string surname);
         IList<Contact> SearchContactsByEmail(Guid userId, string email);

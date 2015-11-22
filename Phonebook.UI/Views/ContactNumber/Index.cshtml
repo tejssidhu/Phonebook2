@@ -5,37 +5,33 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Contact Numbers - For @ViewBag.ContactName</h2>
+<p>&nbsp;</p>
+<div class="page-header"><h2>Contact Numbers - For @ViewBag.ContactName</h2></div>
 
-<p>
-    @Html.ActionLink("Add New Contact Number", "ManageContactNumber", new { ContactNumberId = Guid.Empty, ContactId = ViewBag.ContactId }) 
-</p>
+<div class="col-md-10 col-md-offset-1">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Description)</th>
+                <th>@Html.DisplayNameFor(model => model.TelephoneNumber)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                <td>@Html.DisplayFor(modelItem => item.TelephoneNumber)</td>
+                <td>
+                    @Html.ActionLink("Edit", "ManageContactNumber", new { ContactNumberId = item.Id, ContactId = item.ContactId }, new { @class = "btn btn-xs btn-default" }) 
+                    @Html.ActionLink("Delete", "DeleteContactNumber", new { ContactNumberId = item.Id, ContactId = item.ContactId }, new { @class = "btn btn-xs btn-danger", onclick = "return confirm('Are you sure you want to delete this contact number?');" })
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
 
-<table>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TelephoneNumber)
-        </th>
-        <th></th>
-    </tr>
+    <p>@Html.ActionLink("Add New Contact Number", "ManageContactNumber", new { ContactNumberId = Guid.Empty, ContactId = ViewBag.ContactId }, new { @class = "btn btn-xs btn-primary" }) @Html.ActionLink("Back to Contacts", "Index", "Contact", new { UserId = ViewBag.UserId }, new { @class = "btn btn-xs btn-link" })</p>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TelephoneNumber)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "ManageContactNumber", new { ContactNumberId = item.Id, ContactId = item.ContactId }) |
-            @Html.ActionLink("Delete", "DeleteContactNumber", new { ContactNumberId = item.Id, ContactId = item.ContactId }, new { onclick = "return confirm('Are you sure you want to delete this contact number?');" })
-        </td>
-    </tr>
-}
-</table>
+</div>
 
-@Html.ActionLink("Back to Contacts", "Index", "Contact", new { UserId = ViewBag.UserId }, new { @class = "cancelButton" })
