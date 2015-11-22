@@ -17,11 +17,11 @@ namespace Phonebook.UI.Controllers
             _contactService = contactService;
         }
 
-        public ActionResult Index(Guid ContactId)
+        public ActionResult Index(Guid contactId)
         {
-            var contactNumbers = _contactNumberService.GetAllByContactId(ContactId);
+            var contactNumbers = _contactNumberService.GetAllByContactId(contactId);
 
-            var contact = _contactService.Get(ContactId);
+            var contact = _contactService.Get(contactId);
             ViewBag.ContactName = contact.Title + " " + contact.Forename + " " + contact.Surname;
             ViewBag.ContactId = contact.Id;
             ViewBag.UserId = contact.UserId;
@@ -29,15 +29,15 @@ namespace Phonebook.UI.Controllers
             return View(contactNumbers);
         }
 
-        public ActionResult ManageContactNumber(Guid ContactNumberId, Guid ContactId)
+        public ActionResult ManageContactNumber(Guid contactNumberId, Guid contactId)
         {
-            var contact = _contactService.Get(ContactId);
+            var contact = _contactService.Get(contactId);
             ViewBag.ContactName = contact.Title + " " + contact.Forename + " " + contact.Surname;
 
-            if (ContactNumberId != Guid.Empty)
-                return View(_contactNumberService.Get(ContactNumberId));
+            if (contactNumberId != Guid.Empty)
+                return View(_contactNumberService.Get(contactNumberId));
             else
-                return View(new ContactNumber { Id = Guid.Empty, ContactId = ContactId });
+                return View(new ContactNumber { Id = Guid.Empty, ContactId = contactId });
         }
 
         [HttpPost]
@@ -87,14 +87,14 @@ namespace Phonebook.UI.Controllers
                 }
             }
 
-            return RedirectToAction("Index", new { ContactId = contactNumber.ContactId });
+            return RedirectToAction("Index", new {contactNumber.ContactId });
         }
 
-        public ActionResult DeleteContactNumber(Guid ContactNumberId, Guid ContactId)
+        public ActionResult DeleteContactNumber(Guid contactNumberId, Guid contactId)
         {
-            _contactNumberService.Delete(ContactNumberId);
+            _contactNumberService.Delete(contactNumberId);
 
-            return RedirectToAction("Index", new { ContactId = ContactId });
+            return RedirectToAction("Index", new { ContactId = contactId });
         }
     }
 }

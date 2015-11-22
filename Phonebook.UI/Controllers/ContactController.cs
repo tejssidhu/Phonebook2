@@ -2,7 +2,6 @@
 using Phonebook.Domain.Interfaces.Services;
 using Phonebook.Domain.Model;
 using System;
-using System.Collections.Generic;
 using System.Web.Mvc;
 
 namespace Phonebook.UI.Controllers
@@ -16,20 +15,20 @@ namespace Phonebook.UI.Controllers
             _contactService = contactService;
         }
 
-        public ActionResult Index(Guid UserId)
+        public ActionResult Index(Guid userId)
         {
-            var contacts = _contactService.GetAllByUserId(UserId);
-            ViewBag.UserId = UserId;
+            var contacts = _contactService.GetAllByUserId(userId);
+            ViewBag.UserId = userId;
 
             return View(contacts);
         }
 
-        public ActionResult ManageContact(Guid ContactId, Guid UserId)
+        public ActionResult ManageContact(Guid contactId, Guid userId)
         {
-            if (ContactId != Guid.Empty)
-                return View(_contactService.Get(ContactId));
+            if (contactId != Guid.Empty)
+                return View(_contactService.Get(contactId));
             else
-                return View(new Contact { Id = Guid.Empty, UserId = UserId });
+                return View(new Contact { Id = Guid.Empty, UserId = userId });
         }
 
         [HttpPost]
@@ -70,14 +69,14 @@ namespace Phonebook.UI.Controllers
                 }
             }
 
-            return RedirectToAction("Index", new { UserId = contact.UserId });
+            return RedirectToAction("Index", new {contact.UserId });
         }
 
-        public ActionResult DeleteContact(Guid ContactId, Guid UserId)
+        public ActionResult DeleteContact(Guid contactId, Guid userId)
         {
-            _contactService.Delete(ContactId);
+            _contactService.Delete(contactId);
 
-            return RedirectToAction("Index", new { UserId = UserId });
+            return RedirectToAction("Index", new { UserId = userId });
         }
     }
 }

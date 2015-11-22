@@ -1,5 +1,7 @@
 ﻿using Phonebook.Domain.Interfaces.Services;
 using System.Web.Mvc;
+using System.Web.Security;
+using Phonebook.UI.ViewModels;
 
 namespace Phonebook.UI.Controllers
 {
@@ -14,10 +16,20 @@ namespace Phonebook.UI.Controllers
 
         public ActionResult Index()
         {
-            var users = _userService.GetAll();
+            FormsAuthentication.SignOut();
 
-            return View(users);
+            return View();
         }
 
+        [HttpPost]
+        public ActionResult Index(LoginViewModel loginViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(loginViewModel);
+            }
+
+
+        }
     }
 }
