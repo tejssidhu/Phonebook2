@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace Phonebook.UI.Controllers
 {
+    [Authorize]
     public class ContactController : Controller
     {
         private readonly IContactService _contactService;
