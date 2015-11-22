@@ -5,6 +5,8 @@ using Phonebook.Domain.Model;
 using System.Collections.Generic;
 using System.Linq;
 using Phonebook.Data.Repositories;
+using Phonebook.Domain.Interfaces.Repositories;
+using Moq;
 
 namespace Phonebook.Tests
 {
@@ -134,7 +136,8 @@ namespace Phonebook.Tests
         public void GetAllOnContactRepository()
         {
             //Arrange
-            ContactRepository contactRepository = new ContactRepository(_config);
+            var mockContactNumberRepository = new Mock<IContactNumberRepository>();
+            ContactRepository contactRepository = new ContactRepository(_config, mockContactNumberRepository.Object);
 
             //Act
             List<Contact> contacts = contactRepository.GetAll().ToList();
@@ -149,7 +152,8 @@ namespace Phonebook.Tests
         public void GetOnContactRepository()
         {
             //Arrange
-            ContactRepository contactRepository = new ContactRepository(_config);
+            var mockContactNumberRepository = new Mock<IContactNumberRepository>();
+            ContactRepository contactRepository = new ContactRepository(_config, mockContactNumberRepository.Object);
 
             //Act
             Contact contact = contactRepository.Get(new Guid("81c4763c-b225-4756-903a-750064167813"));
@@ -164,7 +168,8 @@ namespace Phonebook.Tests
         public void CreateOnContactRepository()
         {
             //Arrange
-            ContactRepository contactRepository = new ContactRepository(_config);
+            var mockContactNumberRepository = new Mock<IContactNumberRepository>();
+            ContactRepository contactRepository = new ContactRepository(_config, mockContactNumberRepository.Object);
 
             var contactToCreate = new Contact
             {
@@ -191,7 +196,8 @@ namespace Phonebook.Tests
         public void UpdateOnContactRepository()
         {
             //Arrange
-            ContactRepository contactRepository = new ContactRepository(_config);
+            var mockContactNumberRepository = new Mock<IContactNumberRepository>();
+            ContactRepository contactRepository = new ContactRepository(_config, mockContactNumberRepository.Object);
 
             var contactToUpdate = _contacts[3];
             contactToUpdate.UserId = new Guid("7b8ceac1-9fb1-4e15-af4b-890b1f0c3ebf");
@@ -215,8 +221,9 @@ namespace Phonebook.Tests
         public void DeleteOnContactRepository()
         {
             //Arrange
-            ContactRepository contactRepository = new ContactRepository(_config);
-            
+            ContactNumberRepository contactNumberRepository = new ContactNumberRepository(_config);
+            ContactRepository contactRepository = new ContactRepository(_config, contactNumberRepository);
+
             var contactToDelete = _contacts[4];
 
             //Act
@@ -228,7 +235,6 @@ namespace Phonebook.Tests
             Assert.IsNull(contact);
 
             //Assert all contact Numbers for this contact have also been removed
-            ContactNumberRepository contactNumberRepository = new ContactNumberRepository(_config);
             var contactNumbers = contactNumberRepository.GetAll().Where(cn => cn.ContactId == contactToDelete.Id).ToList();
 
             Assert.AreEqual(0, contactNumbers.Count);

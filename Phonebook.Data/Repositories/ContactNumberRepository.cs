@@ -60,5 +60,17 @@ namespace Phonebook.Data.Repositories
         {
             _phonebookContext.Dispose();
         }
+
+        public void DeleteContactNumbersByContactId(Guid contactId)
+        {
+            var contactNumbers = _phonebookContext.ContactNumbers.Where(cn => cn.ContactId == contactId).ToList();
+
+            foreach (var contactNumber in contactNumbers)
+            {
+                _phonebookContext.ContactNumbers.Remove(contactNumber);
+            }
+
+            _phonebookContext.SaveContactNumberChanges();
+        }
     }
 }

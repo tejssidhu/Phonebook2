@@ -42,7 +42,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Transactions" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -71,10 +70,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Phonebook.Common\Phonebook.Common.csproj">
-      <Project>{61ed0d02-7795-495b-a837-495f273df058}</Project>
-      <Name>Phonebook.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Phonebook.Data\Phonebook.Data.csproj">
       <Project>{482a85a5-2d8c-49fe-bef0-1a986c03e076}</Project>
       <Name>Phonebook.Data</Name>

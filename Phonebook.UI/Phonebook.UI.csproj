@@ -253,7 +253,6 @@
     <Content Include="Scripts\knockout-2.2.0.debug.js" />
     <Content Include="Scripts\knockout-2.2.0.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="Scripts\routeConfig.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Contact\Index.cshtml">
       <SubType>Code</SubType>

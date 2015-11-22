@@ -9,10 +9,12 @@ namespace Phonebook.Data.Repositories
     public class ContactRepository : IContactRepository
     {
         private readonly PhonebookContext _phonebookContext;
+        private readonly IContactNumberRepository _contactNumberRepository;
 
-        public ContactRepository(Configuration config)
+        public ContactRepository(Configuration config, IContactNumberRepository contactNumberRepository)
         {
             _phonebookContext = new PhonebookContext(config);
+            _contactNumberRepository = contactNumberRepository;
         }
 
         public IList<Domain.Model.Contact> GetAll()
@@ -53,13 +55,7 @@ namespace Phonebook.Data.Repositories
 
         public void Delete(Guid id)
         {
-            var contactNumbers = _phonebookContext.ContactNumbers.Where(cn => cn.ContactId == id).ToList();
-
-            foreach (var contactNumber in contactNumbers)
-            {
-                _phonebookContext.ContactNumbers.Remove(contactNumber);
-            }
-            _phonebookContext.SaveContactNumberChanges();
+            _contactNumberRepository.DeleteContactNumbersByContactId(id);
 
             _phonebookContext.Contacts.Remove(_phonebookContext.Contacts.FirstOrDefault(c => c.Id == id));
 
