@@ -19,35 +19,39 @@
     <body role="document">
         <div class="container theme-showcase" role="main">
             <div class="jumbotron">
-                <h1>Phonebook App</h1>
-                <p>Manage all you contacts and numbers from one convenient site.</p>
+                <h1>Phonebook</h1>
+                <p>Manage all your contacts and numbers from one convenient site.</p>
             </div>
             <div class="page-header"><h2>Login</h2></div>
             <p>Use the form below to login:</p>
 
             <div class="row">
                 <div class="col-md-6 col-md-offset-3">
-                @using (Html.BeginForm("Index", "Login"))
+                @using (Html.BeginForm("Index", "Login", null, FormMethod.Post, new { @class = "form-horizontal" }))
                 {
                     <div class="form-group">
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary()
 
                         <div class="form-group">
-                            @Html.LabelFor(m => m.Username, new { @class = "control-label" })
-                            <div class="controls">
-                                @Html.TextBoxFor(m => m.Username, new { @class = "form-control span6", placeholder = "Username" })
+                            @Html.LabelFor(m => m.Username, new { @class = "col-md-2 control-label" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Username" })
                             </div>
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(m => m.Password, new {@class = "control-label"})
-                            <div class="controls">
-                                @Html.PasswordFor(m => m.Password, new {@class = "form-control span6", placeholder = "Password"})
+                            @Html.LabelFor(m => m.Password, new {@class = "col-md-2 control-label"})
+                            <div class="col-md-8">
+                                @Html.PasswordFor(m => m.Password, new {@class = "form-control", placeholder = "Password"})
                             </div>
                         </div>
-    
-                        <button type="submit" class="btn btn-primary">Login</button>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-8">
+                                <button type="submit" class="btn btn-primary">Login</button>
+                            </div>
+                        </div>
                     </div>
                 }
                 </div>
