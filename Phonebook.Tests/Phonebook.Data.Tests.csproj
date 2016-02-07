@@ -56,8 +56,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="ContactNumberServiceTests.cs" />
-    <Compile Include="ContactServiceTests.cs" />
     <Compile Include="ContatNumberRepositoryTests.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -66,7 +64,6 @@
     </Compile>
     <Compile Include="ContactRepositoryTests.cs" />
     <Compile Include="UserRepositoryTests.cs" />
-    <Compile Include="UserServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
