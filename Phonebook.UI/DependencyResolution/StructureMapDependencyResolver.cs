@@ -50,7 +50,7 @@ namespace Phonebook.UI.DependencyResolution
         /// </returns>
         public IDependencyScope BeginScope()
         {
-            IContainer child = Container.GetNestedContainer();
+            IContainer child = this.Container.GetNestedContainer();
             return new StructureMapDependencyResolver(child);
         }
 

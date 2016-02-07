@@ -55,7 +55,7 @@ namespace Phonebook.UI.DependencyResolution
                 throw new ArgumentNullException("container");
             }
 
-            Container = container;
+            this.Container = container;
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace Phonebook.UI.DependencyResolution
         /// </summary>
         public void Dispose()
         {
-            Container.Dispose();
+            this.Container.Dispose();
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Phonebook.UI.DependencyResolution
         /// </returns>
         public IEnumerable<object> GetServices(Type serviceType)
         {
-            return Container.GetAllInstances(serviceType).Cast<object>();
+            return this.Container.GetAllInstances(serviceType).Cast<object>();
         }
 
         #endregion
@@ -100,7 +100,7 @@ namespace Phonebook.UI.DependencyResolution
         /// </returns>
         protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
         {
-            return Container.GetAllInstances(serviceType).Cast<object>();
+            return this.Container.GetAllInstances(serviceType).Cast<object>();
         }
 
         /// <summary>
@@ -121,11 +121,11 @@ namespace Phonebook.UI.DependencyResolution
             if (string.IsNullOrEmpty(key))
             {
                 return serviceType.IsAbstract || serviceType.IsInterface
-                           ? Container.TryGetInstance(serviceType)
-                           : Container.GetInstance(serviceType);
+                           ? this.Container.TryGetInstance(serviceType)
+                           : this.Container.GetInstance(serviceType);
             }
 
-            return Container.GetInstance(serviceType, key);
+            return this.Container.GetInstance(serviceType, key);
         }
 
         #endregion

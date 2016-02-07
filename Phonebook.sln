@@ -16,9 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{34D25F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phonebook.Common", "Phonebook.Common\Phonebook.Common.csproj", "{61ED0D02-7795-495B-A837-495F273DF058}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phonebook.UI", "Phonebook.UI\Phonebook.UI.csproj", "{D589AF27-CCE1-4242-9EC4-BE4B347B3203}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phonebook.UI", "Phonebook.UI\Phonebook.UI.csproj", "{A75AE97E-F5DF-4B94-A675-19790BFF8EF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phonebook.DurandalUI", "Phonebook.DurandalUI\Phonebook.DurandalUI.csproj", "{A75AE97E-F5DF-4B94-A675-19790BFF8EF5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phonebook.WebApi", "Phonebook.WebApi\Phonebook.WebApi.csproj", "{AB0AA587-6594-4965-BDDD-B7FC90DFE0C6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7FD3973F-1326-4D7D-B8C9-DA5C0ADBC1DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,16 +44,19 @@ Global
 		{61ED0D02-7795-495B-A837-495F273DF058}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61ED0D02-7795-495B-A837-495F273DF058}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61ED0D02-7795-495B-A837-495F273DF058}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D589AF27-CCE1-4242-9EC4-BE4B347B3203}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D589AF27-CCE1-4242-9EC4-BE4B347B3203}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D589AF27-CCE1-4242-9EC4-BE4B347B3203}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D589AF27-CCE1-4242-9EC4-BE4B347B3203}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A75AE97E-F5DF-4B94-A675-19790BFF8EF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A75AE97E-F5DF-4B94-A675-19790BFF8EF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A75AE97E-F5DF-4B94-A675-19790BFF8EF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A75AE97E-F5DF-4B94-A675-19790BFF8EF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB0AA587-6594-4965-BDDD-B7FC90DFE0C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB0AA587-6594-4965-BDDD-B7FC90DFE0C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB0AA587-6594-4965-BDDD-B7FC90DFE0C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB0AA587-6594-4965-BDDD-B7FC90DFE0C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8FC528D9-FEAA-4097-AE3B-B9300EFD14C8} = {7FD3973F-1326-4D7D-B8C9-DA5C0ADBC1DC}
 	EndGlobalSection
 EndGlobal

@@ -18,6 +18,7 @@
 using StructureMap;
 using StructureMap.Graph;
 using Phonebook.Data.Context;
+using StructureMap.Graph;
 
 namespace Phonebook.UI.DependencyResolution {
     public static class IoC {
@@ -26,15 +27,16 @@ namespace Phonebook.UI.DependencyResolution {
                         {
                             x.Scan(scan =>
                                     {
-                                        scan.AssembliesFromApplicationBaseDirectory();
+										scan.AssembliesFromApplicationBaseDirectory();
                                         scan.WithDefaultConventions();
                                     });
-                            x.ForConcreteType<Configuration>().Configure.SetProperty(y => {
-                                y.FilePaths = System.Web.Hosting.HostingEnvironment.MapPath(System.Web.HttpRuntime.AppDomainAppVirtualPath) + "Json\\"; 
-                                y.UsersFileName = "Users.txt";
-                                y.ContactsFileName = "Contacts.txt";
-                                y.ContactNumbersFileName = "ContactNumbers.txt";
-                            });
+							x.ForConcreteType<Configuration>().Configure.SetProperty(y =>
+							{
+								y.FilePaths = System.Web.Hosting.HostingEnvironment.MapPath(System.Web.HttpRuntime.AppDomainAppVirtualPath) + "Json\\";
+								y.UsersFileName = "Users.txt";
+								y.ContactsFileName = "Contacts.txt";
+								y.ContactNumbersFileName = "ContactNumbers.txt";
+							});
                         });
             return ObjectFactory.Container;
         }
