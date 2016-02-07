@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phonebook.Domain", "Phonebo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phonebook.Data", "Phonebook.Data\Phonebook.Data.csproj", "{482A85A5-2D8C-49FE-BEF0-1A986C03E076}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phonebook.Data.Tests", "Phonebook.Tests\Phonebook.Data.Tests.csproj", "{8FC528D9-FEAA-4097-AE3B-B9300EFD14C8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phonebook.Data.Tests", "Phonebook.Data.Tests\Phonebook.Data.Tests.csproj", "{8FC528D9-FEAA-4097-AE3B-B9300EFD14C8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{34D25FF9-340D-410E-BB47-EEFA5CC2F1F7}"
 	ProjectSection(SolutionItems) = preProject
