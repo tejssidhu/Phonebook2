@@ -25,7 +25,8 @@ namespace Phonebook.WebApi.DependencyResolution
 {
     public static class IoC {
         public static IContainer Initialize() {
-            ObjectFactory.Initialize(x =>
+			var container = new Container();
+            container.Configure(x =>
                         {
 							x.Scan(scan =>
 							{
@@ -40,7 +41,7 @@ namespace Phonebook.WebApi.DependencyResolution
 								y.ContactNumbersFileName = "ContactNumbers.txt";
 							});
                         });
-            return ObjectFactory.Container;
+			return container;
         }
 
 		public static string GetPath()
