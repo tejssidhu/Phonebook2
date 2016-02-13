@@ -1,48 +1,34 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IoC.cs" company="Web Advanced">
-// Copyright 2012 Web Advanced (www.webadvanced.com)
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
+﻿using StructureMap;
 using Phonebook.Data.Context;
-using StructureMap;
-using StructureMap.Graph;
-using StructureMap.Graph;
+using System.Diagnostics;
 
 namespace Phonebook.WebApi.DependencyResolution
 {
-    public static class IoC {
-        public static IContainer Initialize() {
+	public static class IoC
+	{
+		public static IContainer Initialize()
+		{
 			var container = new Container();
-            container.Configure(x =>
-                        {
-							x.Scan(scan =>
-							{
-								scan.AssembliesFromApplicationBaseDirectory();
-								scan.WithDefaultConventions();
-							});
-							x.ForConcreteType<Configuration>().Configure.SetProperty(y =>
-							{
-								y.FilePaths = System.Web.Hosting.HostingEnvironment.MapPath(GetPath()) + "Json\\";
-								y.UsersFileName = "Users.txt";
-								y.ContactsFileName = "Contacts.txt";
-								y.ContactNumbersFileName = "ContactNumbers.txt";
-							});
-                        });
+			container.Configure(x =>
+			{
+				x.Scan(scan =>
+				{
+					scan.WithDefaultConventions();
+					scan.AssembliesFromApplicationBaseDirectory();
+				});
+				x.ForConcreteType<Configuration>().Configure.SetProperty(y =>
+				{
+					y.FilePaths = System.Web.Hosting.HostingEnvironment.MapPath(GetPath()) + "Json\\";
+					y.UsersFileName = "Users.txt";
+					y.ContactsFileName = "Contacts.txt";
+					y.ContactNumbersFileName = "ContactNumbers.txt";
+				});
+			});
+
+			Debug.WriteLine(container.WhatDoIHave());
+
 			return container;
-        }
+		}
 
 		public static string GetPath()
 		{
@@ -51,5 +37,5 @@ namespace Phonebook.WebApi.DependencyResolution
 			else
 				return System.Web.HttpRuntime.AppDomainAppVirtualPath + "\\";
 		}
-    }
+	}
 }

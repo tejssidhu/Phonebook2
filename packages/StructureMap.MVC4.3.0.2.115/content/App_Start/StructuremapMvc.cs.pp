@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="StructuremapMvc.cs" company="Web Advanced">
 // Copyright 2012 Web Advanced (www.webadvanced.com)
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,12 +18,11 @@
 using System.Web.Http;
 using System.Web.Mvc;
 using StructureMap;
-using Phonebook.WebApi.DependencyResolution;
+using $rootnamespace$.DependencyResolution;
 
-[assembly: WebActivator.PreApplicationStartMethod(typeof(Phonebook.WebApi.App_Start.StructuremapMvc), "Start")]
+[assembly: WebActivator.PreApplicationStartMethod(typeof($rootnamespace$.App_Start.StructuremapMvc), "Start")]
 
-namespace Phonebook.WebApi.App_Start
-{
+namespace $rootnamespace$.App_Start {
     public static class StructuremapMvc {
         public static void Start() {
 			IContainer container = IoC.Initialize();

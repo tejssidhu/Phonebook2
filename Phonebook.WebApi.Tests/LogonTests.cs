@@ -11,6 +11,7 @@ using Phonebook.Domain.Interfaces.Services;
 using System.Net.Http;
 using System.Net;
 using Newtonsoft.Json;
+using System.Web.Http.Results;
 
 namespace Phonebook.WebApi.Tests
 {
@@ -45,7 +46,7 @@ namespace Phonebook.WebApi.Tests
 		#endregion
 
 		[TestMethod]
-		public void AuthenticateWithInvalidPasswordOnLogonController()
+		public void AuthenticateWithValidPassword()
 		{
 			//arrange
 			var mockService = new Mock<IUserService>();
@@ -55,11 +56,70 @@ namespace Phonebook.WebApi.Tests
 			logonController.Configuration = new HttpConfiguration();
 
 			//act
-			var result = logonController.Logon(new Models.LogonModel{ Username = _user.Username, Password = _user.Password});
-			var user = JsonConvert.DeserializeObject<User>(result.Content.ReadAsStringAsync().Result);
+			IHttpActionResult actionResult = logonController.Logon(new Models.LogonModel { Username = _user.Username, Password = _user.Password });
+			var contentResult = actionResult as OkNegotiatedContentResult<User>;
+
 			//assert
-			Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
-			Assert.AreEqual(_user, user);
+			Assert.IsNotNull(contentResult);
+			Assert.IsNotNull(contentResult.Content);
+			Assert.AreEqual(_user, contentResult.Content);
+
+			logonController.Dispose();
+		}
+
+		[TestMethod]
+		public void AuthenticateWithInvalidPassword()
+		{
+			//arrange
+			var mockService = new Mock<IUserService>();
+			mockService.Setup(x => x.Authenticate(_user.Username, _user.Password)).Returns(_user);
+			LogonController logonController = new LogonController(mockService.Object);
+			logonController.Request = new HttpRequestMessage();
+			logonController.Configuration = new HttpConfiguration();
+
+			//act
+			IHttpActionResult actionResult = logonController.Logon(new Models.LogonModel { Username = _user.Username, Password = "WrongPassword" });
+
+			//assert
+			Assert.IsInstanceOfType(actionResult, typeof(UnauthorizedResult));
+
+			logonController.Dispose();
+		}
+
+		[TestMethod]
+		public void AuthenticateWithInvalidUsername()
+		{
+			//arrange
+			var mockService = new Mock<IUserService>();
+			mockService.Setup(x => x.Authenticate(_user.Username, _user.Password)).Returns(_user);
+			LogonController logonController = new LogonController(mockService.Object);
+			logonController.Request = new HttpRequestMessage();
+			logonController.Configuration = new HttpConfiguration();
+
+			//act
+			IHttpActionResult actionResult = logonController.Logon(new Models.LogonModel { Username = "UnknownUser", Password = _user.Password });
+
+			//assert
+			Assert.IsInstanceOfType(actionResult, typeof(UnauthorizedResult));
+
+			logonController.Dispose();
+		}
+
+		[TestMethod]
+		public void AuthenticateWithInvalidUsernameAndPassword()
+		{
+			//arrange
+			var mockService = new Mock<IUserService>();
+			mockService.Setup(x => x.Authenticate(_user.Username, _user.Password)).Returns(_user);
+			LogonController logonController = new LogonController(mockService.Object);
+			logonController.Request = new HttpRequestMessage();
+			logonController.Configuration = new HttpConfiguration();
+
+			//act
+			IHttpActionResult actionResult = logonController.Logon(new Models.LogonModel { Username = "UnknownUser", Password = "WrongPassword" });
+
+			//assert
+			Assert.IsInstanceOfType(actionResult, typeof(UnauthorizedResult));
 
 			logonController.Dispose();
 		}
