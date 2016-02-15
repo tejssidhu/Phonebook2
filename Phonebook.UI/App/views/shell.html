@@ -1,0 +1,6 @@
+﻿<div>
+	<!--ko if:userIsLoggedOn -->
+		<!--ko compose: {model: 'viewmodels/navigation', activate:true } --> <!-- /ko -->
+	<!--/ko-->
+   <div class="app-container container" data-bind="router: { cacheViews: false }"></div>
+</div>

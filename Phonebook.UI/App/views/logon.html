@@ -1,0 +1,14 @@
+﻿<div class="">
+	<div id="error" data-bind="text: errorMessage, visible: errorMessage"></div>
+	<div class="form">
+		<form method="post" data-bind="submit: submit" autocomplete="off">
+			<label for="UserName" data-bind="text: 'Username:'" />
+			<input id="UserName" name="UserName" type="text" autocomplete="off" />
+			<label for="Password" data-bind="text: 'Password:'" />
+			<input id="Password" name="Password" type="password" autocomplete="off" />
+			<button id="logon" type="submit" data-bind="disable: inProgress">
+				<span data-bind="text: 'Sign In'"></span>
+			</button>
+		</form>
+	</div>
+</div>

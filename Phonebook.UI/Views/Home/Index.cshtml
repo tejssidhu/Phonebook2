@@ -1,0 +1,39 @@
+﻿@using System.Web.Optimization
+@using System.Globalization
+@using Phonebook.UI.Helpers;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section ViewScripts
+{
+	@Scripts.Render("~/Scripts/vendor")	
+
+	@if (HttpContext.Current.IsDebuggingEnabled)
+	{
+		<script type="text/javascript" src="~/Scripts/require.js" data-main="/phonebook/App/main"></script>
+	}
+	else
+	{
+		<script type="text/javascript" src="~/Scripts/require.js" data-main="/AppBuilt/main"></script>
+	}
+
+	@{
+		var logonDetails = Session.GetLogonDetails();
+		var userDetails = Session.GetUserDetails();
+
+		var loggedOn = (logonDetails != null).ToString(CultureInfo.InvariantCulture).ToLowerInvariant();
+		var userId = (userDetails != null) ? HttpUtility.JavaScriptStringEncode(WebUtility.HtmlDecode(userDetails.UserId)) : string.Empty;	 
+	}
+
+	<script>
+		(function (mss) {
+			mss.userDetails = mss.userDetails || {};
+			mss.userDetails.userId = ko.observable('@userId');
+
+			mss.loggedOn = ko.observable(@loggedOn);
+		}(this.mss = this.mss || {}));
+
+	</script>
+}
