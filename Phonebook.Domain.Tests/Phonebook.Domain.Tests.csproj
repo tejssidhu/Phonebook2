@@ -62,11 +62,6 @@
     <Compile Include="UserServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Json\TestContactNumbers.txt" />
-    <Content Include="Json\TestContacts.txt" />
-    <Content Include="Json\TestUsers.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Phonebook.Domain\Phonebook.Domain.csproj">
       <Project>{8db600d8-61b6-44d4-8d17-b3c07aae6d5f}</Project>
       <Name>Phonebook.Domain</Name>

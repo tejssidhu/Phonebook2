@@ -18,8 +18,9 @@ namespace Phonebook.Domain.Model
         [MaxLength(100)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        
-        public List<Contact> PhoneBook { get; set; }
+
+		//defined as virtual so that they can take advantage of certain Entity Framework functionality such as lazy loading
+        public virtual ICollection<Contact> PhoneBook { get; set; }
 
         public User()
         {

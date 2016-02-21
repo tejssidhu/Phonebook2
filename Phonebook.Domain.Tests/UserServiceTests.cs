@@ -7,6 +7,7 @@ using Phonebook.Domain.Exceptions;
 using Phonebook.Domain.Interfaces.Repositories;
 using Phonebook.Domain.Model;
 using Phonebook.Domain.Services;
+using Phonebook.Domain.Interfaces.UnitOfWork;
 
 namespace Phonebook.Tests
 {
@@ -44,11 +45,13 @@ namespace Phonebook.Tests
         public void GetAllOnUserService()
         {
             //arrange
-            var mockUserRepository = new Mock<IUserRepository>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockUserRepository = new Mock<IRepository<User>>();
 
-            mockUserRepository.Setup(x => x.GetAll()).Returns(_users);
-
-            UserService userService = new UserService(mockUserRepository.Object);
+			mockUnitOfWork.Setup(x => x.UserRepository).Returns(mockUserRepository.Object);
+            mockUserRepository.Setup(x => x.GetAll()).Returns(_users.AsQueryable());
+						
+			UserService userService = new UserService(mockUnitOfWork.Object);
 
             //act
             List<User> retUsers = userService.GetAll().ToList();
@@ -63,12 +66,14 @@ namespace Phonebook.Tests
         public void GetOnUserService()
         {
             //arrange
-            var mockUserRepository = new Mock<IUserRepository>();
-            Guid id = _user.Id;
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockUserRepository = new Mock<IRepository<User>>();
+			Guid id = _user.Id;
 
+			mockUnitOfWork.Setup(x => x.UserRepository).Returns(mockUserRepository.Object);
             mockUserRepository.Setup(x => x.Get(id)).Returns(_user);
 
-            UserService userService = new UserService(mockUserRepository.Object);
+			UserService userService = new UserService(mockUnitOfWork.Object);
 
             //act
             User retUser = userService.Get(id);
@@ -84,11 +89,13 @@ namespace Phonebook.Tests
         public void AuthenticateWithInvalidPasswordOnUserService()
         {
             //arrange
-            var mockUserRepository = new Mock<IUserRepository>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockUserRepository = new Mock<IRepository<User>>();
 
-            mockUserRepository.Setup(x => x.GetAll()).Returns(_users);
+			mockUnitOfWork.Setup(x => x.UserRepository).Returns(mockUserRepository.Object);
+            mockUserRepository.Setup(x => x.GetAll()).Returns(_users.AsQueryable());
 
-            UserService userService = new UserService(mockUserRepository.Object);
+			UserService userService = new UserService(mockUnitOfWork.Object);
 
             //act
             User retUser = userService.Authenticate(_user.Username, _user.Password + "WRONG");
@@ -102,11 +109,13 @@ namespace Phonebook.Tests
         public void AuthenticateValidPasswordOnUserService()
         {
             //arrange
-            var mockUserRepository = new Mock<IUserRepository>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockUserRepository = new Mock<IRepository<User>>();
 
-            mockUserRepository.Setup(x => x.GetAll()).Returns(_users);
+			mockUnitOfWork.Setup(x => x.UserRepository).Returns(mockUserRepository.Object);
+            mockUserRepository.Setup(x => x.GetAll()).Returns(_users.AsQueryable());
 
-            UserService userService = new UserService(mockUserRepository.Object);
+			UserService userService = new UserService(mockUnitOfWork.Object);
 
             //act
             User retUser = userService.Authenticate(_user.Username, _user.Password);
@@ -122,11 +131,13 @@ namespace Phonebook.Tests
         public void AuthenticateWithNoExistentUserOnUserService()
         {
             //arrange
-            var mockUserRepository = new Mock<IUserRepository>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockUserRepository = new Mock<IRepository<User>>();
 
-            mockUserRepository.Setup(x => x.GetAll()).Returns(_users);
+			mockUnitOfWork.Setup(x => x.UserRepository).Returns(mockUserRepository.Object);
+			mockUserRepository.Setup(x => x.GetAll()).Returns(_users.AsQueryable());
 
-            UserService userService = new UserService(mockUserRepository.Object);
+			UserService userService = new UserService(mockUnitOfWork.Object);
 
             //act
             User retUser = userService.Authenticate(_user.Username + "DOESNTEXIST", _user.Password);
@@ -141,11 +152,13 @@ namespace Phonebook.Tests
         public void CreateWithExistingUserOnUserService()
         {
             //arrange
-            var mockUserRepository = new Mock<IUserRepository>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockUserRepository = new Mock<IRepository<User>>();
 
-            mockUserRepository.Setup(x => x.GetAll()).Returns(_users);
+			mockUnitOfWork.Setup(x => x.UserRepository).Returns(mockUserRepository.Object);
+            mockUserRepository.Setup(x => x.GetAll()).Returns(_users.AsQueryable());
 
-            UserService userService = new UserService(mockUserRepository.Object);
+			UserService userService = new UserService(mockUnitOfWork.Object);
 
             //act
             Guid id = userService.Create(_user);
@@ -159,7 +172,10 @@ namespace Phonebook.Tests
         public void CreateOnUserService()
         {
             //arrange
-            var mockUserRepository = new Mock<IUserRepository>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockUserRepository = new Mock<IRepository<User>>();
+
+			mockUnitOfWork.Setup(x => x.UserRepository).Returns(mockUserRepository.Object);
             User userToCreate = new User
                 {
                     Id = new Guid("0b21d4b6-eb42-456b-9828-a90cb604bceb"),
@@ -167,9 +183,9 @@ namespace Phonebook.Tests
                     Username = "igardner8"
                 };
 
-            mockUserRepository.Setup(x => x.GetAll()).Returns(_users);
+            mockUserRepository.Setup(x => x.GetAll()).Returns(_users.AsQueryable());
 
-            UserService userService = new UserService(mockUserRepository.Object);
+			UserService userService = new UserService(mockUnitOfWork.Object);
 
             //act
             Guid id = userService.Create(userToCreate);
@@ -186,11 +202,13 @@ namespace Phonebook.Tests
         public void UpdateToExistingUsernameOnUserService()
         {
             //arrange
-            var mockUserRepository = new Mock<IUserRepository>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockUserRepository = new Mock<IRepository<User>>();
 
-            mockUserRepository.Setup(x => x.GetAll()).Returns(_users);
+			mockUnitOfWork.Setup(x => x.UserRepository).Returns(mockUserRepository.Object);
+            mockUserRepository.Setup(x => x.GetAll()).Returns(_users.AsQueryable());
 
-            UserService userService = new UserService(mockUserRepository.Object);
+			UserService userService = new UserService(mockUnitOfWork.Object);
 
             //set username to that of another user
             _user.Username = _users[0].Username;
@@ -207,11 +225,13 @@ namespace Phonebook.Tests
         public void UpdateOnUserService()
         {
             //arrange
-            var mockUserRepository = new Mock<IUserRepository>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockUserRepository = new Mock<IRepository<User>>();
 
-            mockUserRepository.Setup(x => x.GetAll()).Returns(_users);
+			mockUnitOfWork.Setup(x => x.UserRepository).Returns(mockUserRepository.Object);
+            mockUserRepository.Setup(x => x.GetAll()).Returns(_users.AsQueryable());
 
-            UserService userService = new UserService(mockUserRepository.Object);
+			UserService userService = new UserService(mockUnitOfWork.Object);
 
             //set username to that of another user
             _user.Username = _user.Username + "WITHUPDATE";
@@ -229,11 +249,13 @@ namespace Phonebook.Tests
         public void DeleteOnUserService()
         {
             //arrange
-            var mockUserRepository = new Mock<IUserRepository>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockUserRepository = new Mock<IRepository<User>>();
 
-            mockUserRepository.Setup(x => x.GetAll()).Returns(_users);
+			mockUnitOfWork.Setup(x => x.UserRepository).Returns(mockUserRepository.Object);
+			mockUserRepository.Setup(x => x.GetAll()).Returns(_users.AsQueryable());
 
-            UserService userService = new UserService(mockUserRepository.Object);
+			UserService userService = new UserService(mockUnitOfWork.Object);
 
             //act
             userService.Delete(_user.Id);
@@ -242,7 +264,6 @@ namespace Phonebook.Tests
             mockUserRepository.Verify(y => y.Delete(It.IsAny<Guid>()));
 
             userService.Dispose();
-        }
-
-    }
+		}
+	}
 }

@@ -16,13 +16,6 @@ namespace Phonebook.WebApi.DependencyResolution
 					scan.WithDefaultConventions();
 					scan.AssembliesFromApplicationBaseDirectory();
 				});
-				x.ForConcreteType<Configuration>().Configure.SetProperty(y =>
-				{
-					y.FilePaths = System.Web.Hosting.HostingEnvironment.MapPath(GetPath()) + "Json\\";
-					y.UsersFileName = "Users.txt";
-					y.ContactsFileName = "Contacts.txt";
-					y.ContactNumbersFileName = "ContactNumbers.txt";
-				});
 			});
 
 			Debug.WriteLine(container.WhatDoIHave());

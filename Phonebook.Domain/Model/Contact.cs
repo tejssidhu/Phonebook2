@@ -27,7 +27,9 @@ namespace Phonebook.Domain.Model
         [MaxLength(100)]
         public string Email { get; set; }
 
-        public List<ContactNumber> ContactNumbers { get; set; }
+		//defined as virtual so that they can take advantage of certain Entity Framework functionality such as lazy loading
+        public virtual ICollection<ContactNumber> ContactNumbers { get; set; }
+		public virtual User User { get; set; }
 
         public Contact()
         {

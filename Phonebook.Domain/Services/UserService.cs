@@ -5,64 +5,69 @@ using Phonebook.Domain.Exceptions;
 using Phonebook.Domain.Interfaces.Repositories;
 using Phonebook.Domain.Interfaces.Services;
 using Phonebook.Domain.Model;
+using Phonebook.Domain.Interfaces.UnitOfWork;
 
 namespace Phonebook.Domain.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _userRepository;
+		private readonly IUnitOfWork _unitOfWork;
 
-        public UserService(IUserRepository userRepository)
-        {
-            _userRepository = userRepository;
-        }
+		public UserService(IUnitOfWork unitOfWork)
+		{
+			_unitOfWork = unitOfWork;
+		}
 
         public void Dispose()
         {
-            _userRepository.Dispose();
+			_unitOfWork.Dispose();
         }
 
-        public IList<User> GetAll()
+		public IQueryable<User> GetAll()
         {
-            return _userRepository.GetAll();
+			return _unitOfWork.UserRepository.GetAll();
         }
 
         public User Get(Guid id)
         {
-            return _userRepository.Get(id);
+			return _unitOfWork.UserRepository.Get(id);
         }
 
         public Guid Create(User model)
         {
-            var user = _userRepository.GetAll().SingleOrDefault(u => u.Username == model.Username);
+			var user = _unitOfWork.UserRepository.GetAll().SingleOrDefault(u => u.Username == model.Username);
 
             if (user != null) throw new ObjectAlreadyExistException("User");
 
-            var id = _userRepository.Create(model);
+			var id = _unitOfWork.UserRepository.Create(model);
+
+			_unitOfWork.SaveChanges();
 
             return id;
         }
 
         public void Update(User model)
         {
-            if (_userRepository.GetAll().Any(u => u.Username == model.Username && u.Id != model.Id))
+            if (_unitOfWork.UserRepository.GetAll().Any(u => u.Username == model.Username && u.Id != model.Id))
             {
                 throw new ObjectAlreadyExistException("User", "username");
             }
 
-            //TODO: more business logic to check sub collections
+			_unitOfWork.UserRepository.Update(model);
 
-            _userRepository.Update(model);
+			_unitOfWork.SaveChanges();
         }
 
         public void Delete(Guid id)
         {
-            _userRepository.Delete(id);
+			_unitOfWork.UserRepository.Delete(id);
+			
+			_unitOfWork.SaveChanges();
         }
 
         public User Authenticate(string username, string password)
         {
-            var user = _userRepository.GetAll().SingleOrDefault(u => u.Username == username);
+			var user = _unitOfWork.UserRepository.GetAll().SingleOrDefault(u => u.Username == username);
 
             if (user == null) throw new ObjectNotFoundException("User");
 

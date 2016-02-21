@@ -8,6 +8,7 @@ using Phonebook.Domain.Interfaces.Repositories;
 using Phonebook.Domain.Model;
 using Phonebook.Domain.Services;
 using Phonebook.Domain.Interfaces.Services;
+using Phonebook.Domain.Interfaces.UnitOfWork;
 
 namespace Phonebook.Tests
 {
@@ -113,8 +114,9 @@ namespace Phonebook.Tests
         public void CreateContactForUserWithEmailAddressOfExistingContactOnContactService()
         {
             //arrange
-            var mockContactRepository = new Mock<IContactRepository>();
-            var mockUserService = new Mock<IUserService>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockContactRepository = new Mock<IRepository<Contact>>();
+			var mockUserRespository = new Mock<IRepository<User>>();
 
             Contact contactToCreate = new Contact
             {
@@ -125,10 +127,12 @@ namespace Phonebook.Tests
                 Surname = "Reyes"
             };
 
-            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
-            mockUserService.Setup(x => x.Get(It.IsAny<Guid>())).Returns(_user);
+			mockUnitOfWork.Setup(x => x.ContactRepository).Returns(mockContactRepository.Object);
+			mockUnitOfWork.Setup(x => x.UserRepository).Returns(mockUserRespository.Object);
+            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts.AsQueryable());
+			mockUserRespository.Setup(x => x.Get(It.IsAny<Guid>())).Returns(_user);
 
-            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
+			ContactService contactService = new ContactService(mockUnitOfWork.Object);
 
             //act
             Guid contactId = contactService.Create(contactToCreate);
@@ -142,15 +146,18 @@ namespace Phonebook.Tests
         public void CreateNewContactForNoneExistentUserOnContactService()
         {
             //arrange
-            var mockContactRepository = new Mock<IContactRepository>();
-            var mockUserService = new Mock<IUserService>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockContactRepository = new Mock<IRepository<Contact>>();
+			var mockUserRespository = new Mock<IRepository<User>>();
 
             var contactToCreate = new Contact { UserId = new Guid("318274f0-573c-416b-aa4b-b68b83ec8427"), Forename = "Carlos", Surname = "Daniels", Email = "cdaniels1h@tripod.com", Title = "Mr" };
 
-            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
-            mockUserService.Setup(x => x.Get(It.IsAny<Guid>())).Returns(() => null);
+			mockUnitOfWork.Setup(x => x.ContactRepository).Returns(mockContactRepository.Object);
+			mockUnitOfWork.Setup(x => x.UserRepository).Returns(mockUserRespository.Object);
+            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts.AsQueryable());
+			mockUserRespository.Setup(x => x.Get(It.IsAny<Guid>())).Returns(() => null);
 
-            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
+			ContactService contactService = new ContactService(mockUnitOfWork.Object);
 
             //act
             Guid contactId = contactService.Create(contactToCreate);
@@ -164,15 +171,18 @@ namespace Phonebook.Tests
         public void CreateNewContactOnContactService()
         {
             //arrange
-            var mockContactRepository = new Mock<IContactRepository>();
-            var mockUserService = new Mock<IUserService>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockContactRepository = new Mock<IRepository<Contact>>();
+			var mockUserRespository = new Mock<IRepository<User>>();
 
             var contactToCreate = new Contact { UserId = new Guid("0d1a6711-e9eb-418e-adda-47a62a7900c9"), Forename = "Carlos", Surname = "Daniels", Email = "cdaniels1h@tripod.com", Title = "Mr" };
 
-            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
-            mockUserService.Setup(x => x.Get(It.IsAny<Guid>())).Returns(_users[10]);
+			mockUnitOfWork.Setup(x => x.ContactRepository).Returns(mockContactRepository.Object);
+			mockUnitOfWork.Setup(x => x.UserRepository).Returns(mockUserRespository.Object);
+            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts.AsQueryable());
+			mockUserRespository.Setup(x => x.Get(It.IsAny<Guid>())).Returns(_users[10]);
 
-            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
+			ContactService contactService = new ContactService(mockUnitOfWork.Object);
 
             //act
             Guid contactId = contactService.Create(contactToCreate);
@@ -189,17 +199,17 @@ namespace Phonebook.Tests
         public void UpdateContactToExistingContactsEmailOnContactService()
         {
             //arrange
-            var mockContactRepository = new Mock<IContactRepository>();
-            var mockUserService = new Mock<IUserService>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockContactRepository = new Mock<IRepository<Contact>>();
+			var contactToUpdate = _user.PhoneBook.Where((x, i) => i == 0).FirstOrDefault(); //_user.PhoneBook[0];
 
-            var contactToUpdate = _user.PhoneBook[0];
+			mockUnitOfWork.Setup(x => x.ContactRepository).Returns(mockContactRepository.Object);
+			mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts.AsQueryable());
 
-            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
-
-            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
+			ContactService contactService = new ContactService(mockUnitOfWork.Object);
 
             //set email to that of another contact in that users Phonebook
-            contactToUpdate.Email = _user.PhoneBook[1].Email;
+            contactToUpdate.Email = _user.PhoneBook.Where((x, i) => i == 1).FirstOrDefault().Email;
 
             //act
             contactService.Update(contactToUpdate);
@@ -213,12 +223,13 @@ namespace Phonebook.Tests
         public void UpdateContactOnContactService()
         {
             //arrange
-            var mockContactRepository = new Mock<IContactRepository>();
-            var mockUserService = new Mock<IUserService>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockContactRepository = new Mock<IRepository<Contact>>();
 
-            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
+			mockUnitOfWork.Setup(x => x.ContactRepository).Returns(mockContactRepository.Object);
+			mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts.AsQueryable());
 
-            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
+			ContactService contactService = new ContactService(mockUnitOfWork.Object);
 
             //set username to that of another user
             _contact.Email = _contact.Email + "WITHUPDATE";
@@ -236,12 +247,13 @@ namespace Phonebook.Tests
         public void DeleteContactOnContactService()
         {
             //arrange
-            var mockContactRepository = new Mock<IContactRepository>();
-            var mockUserService = new Mock<IUserService>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockContactRepository = new Mock<IRepository<Contact>>();
 
-            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
+			mockUnitOfWork.Setup(x => x.ContactRepository).Returns(mockContactRepository.Object);
+			mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts.AsQueryable());
 
-            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
+			ContactService contactService = new ContactService(mockUnitOfWork.Object);
 
             //act
             contactService.Delete(_contact.Id);
@@ -256,18 +268,19 @@ namespace Phonebook.Tests
         public void GetAllContactsByUserIdOnContactService()
         {
             //arrange
-            var mockContactRepository = new Mock<IContactRepository>();
-            var mockUserService = new Mock<IUserService>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockContactRepository = new Mock<IRepository<Contact>>();
 
-            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
+			mockUnitOfWork.Setup(x => x.ContactRepository).Returns(mockContactRepository.Object);
+			mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts.AsQueryable());
 
-            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
+			ContactService contactService = new ContactService(mockUnitOfWork.Object);
 
             //act
             List<Contact> retContacts = contactService.GetAllByUserId(_user.Id).ToList();
 
             //assert
-            CollectionAssert.AreEqual(_user.PhoneBook, retContacts);
+            CollectionAssert.AreEqual(_user.PhoneBook.ToList(), retContacts);
 
             contactService.Dispose();
         }
@@ -276,12 +289,13 @@ namespace Phonebook.Tests
         public void SearchContactsByEmailOnContactService()
         {
             //arrange
-            var mockContactRepository = new Mock<IContactRepository>();
-            var mockUserService = new Mock<IUserService>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockContactRepository = new Mock<IRepository<Contact>>();
 
-            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
+			mockUnitOfWork.Setup(x => x.ContactRepository).Returns(mockContactRepository.Object);
+			mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts.AsQueryable());
 
-            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
+			ContactService contactService = new ContactService(mockUnitOfWork.Object);
 
             //act
             List<Contact> retContacts = contactService.SearchContactsByEmail(_user.Id, "treyes0@").ToList();
@@ -296,12 +310,13 @@ namespace Phonebook.Tests
         public void SearchContactsByNameOnContactService()
         {
             //arrange
-            var mockContactRepository = new Mock<IContactRepository>();
-            var mockUserService = new Mock<IUserService>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockContactRepository = new Mock<IRepository<Contact>>();
 
-            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
+			mockUnitOfWork.Setup(x => x.ContactRepository).Returns(mockContactRepository.Object);
+			mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts.AsQueryable());
 
-            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
+			ContactService contactService = new ContactService(mockUnitOfWork.Object);
 
             //act
             List<Contact> retContacts = contactService.SearchContactsByName(_user.Id, "S", "Tucker").ToList();
@@ -316,12 +331,13 @@ namespace Phonebook.Tests
         public void SearchContactsByNameAndEmailOnContactService()
         {
             //arrange
-            var mockContactRepository = new Mock<IContactRepository>();
-            var mockUserService = new Mock<IUserService>();
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockContactRepository = new Mock<IRepository<Contact>>();
 
-            mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts);
+			mockUnitOfWork.Setup(x => x.ContactRepository).Returns(mockContactRepository.Object);
+			mockContactRepository.Setup(x => x.GetAll()).Returns(_contacts.AsQueryable());
 
-            ContactService contactService = new ContactService(mockContactRepository.Object, mockUserService.Object);
+			ContactService contactService = new ContactService(mockUnitOfWork.Object);
 
             //act
             List<Contact> retContacts = contactService.Search(_user.Id, "Tuc", "tuttocitta").ToList();

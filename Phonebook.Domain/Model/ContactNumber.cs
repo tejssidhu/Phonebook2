@@ -21,6 +21,9 @@ namespace Phonebook.Domain.Model
         [DisplayName("Telephone Number")]
         public string TelephoneNumber { get; set; }
 
+		//defined as virtual so that they can take advantage of certain Entity Framework functionality such as lazy loading
+		public virtual Contact Contact { get; set; }
+
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())

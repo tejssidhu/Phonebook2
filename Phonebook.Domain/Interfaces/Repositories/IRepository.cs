@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Phonebook.Domain.Interfaces.Repositories
 {
-    public interface IRepository<T> : IDisposable
+    public interface IRepository<TEntity> where TEntity : class
     {
-        IList<T> GetAll();
-        T Get(Guid id);
-        Guid Create(T model);
-        void Update(T model);
+		IQueryable<TEntity> GetAll();
+		TEntity Get(Guid id);
+		Guid Create(TEntity model);
+		void Update(TEntity model);
         void Delete(Guid id);
     }
 }

@@ -1,0 +1,56 @@
+﻿using Phonebook.Data.Context;
+using Phonebook.Data.Repositories;
+using Phonebook.Domain.Interfaces.Repositories;
+using Phonebook.Domain.Interfaces.UnitOfWork;
+using Phonebook.Domain.Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Phonebook.Data
+{
+	public class UnitOfWork : IUnitOfWork
+	{
+		private readonly PhonebookContext _phonebookContext;
+
+		public UnitOfWork()
+		{
+			_phonebookContext = new PhonebookContext();
+
+			UserRepository = new UserRepository(_phonebookContext);
+			ContactRepository = new ContactRepository(_phonebookContext);
+			ContactNumberRepository = new ContactNumberRepository(_phonebookContext);
+		}
+
+		public IRepository<User> UserRepository { get; private set; }
+		public IRepository<Contact> ContactRepository { get; private set; }
+		public IContactNumberRepository ContactNumberRepository { get; private set; }
+
+		public void SaveChanges()
+		{
+			_phonebookContext.SaveChanges();
+		}
+
+		private bool disposed = false;
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!this.disposed)
+			{
+				if (disposing)
+				{
+					_phonebookContext.Dispose();
+				}
+			}
+			this.disposed = true;
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+	}
+}

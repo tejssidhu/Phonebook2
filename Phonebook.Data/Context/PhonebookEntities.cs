@@ -7,7 +7,7 @@ using Phonebook.Domain.Model;
 
 namespace Phonebook.Data.Context
 {
-    public class PhonebookContext : IDisposable
+    public class PhonebookEntity : IDisposable //PhonebookContext
     {
         private readonly string _usersFilePath;
         private readonly string _contactsFilePath;
@@ -162,20 +162,12 @@ namespace Phonebook.Data.Context
             }
         }
 
-        public void SaveUserChanges()
-        {
-            SaveUsersFile();
-        }
-
-        public void SaveContactChanges()
-        {
-            SaveContactsFile();
-        }
-
-        public void SaveContactNumberChanges()
-        {
-            SaveContactNumbersFile();
-        }
+		public void SaveChanges()
+		{
+			SaveUsersFile();
+			SaveContactsFile();
+			SaveContactNumbersFile();
+		}
 
         public void Dispose()
         {

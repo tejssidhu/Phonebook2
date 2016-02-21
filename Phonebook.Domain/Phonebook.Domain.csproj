@@ -44,13 +44,12 @@
     <Compile Include="Exceptions\ObjectAlreadyExistException.cs" />
     <Compile Include="Exceptions\ObjectNotFoundException.cs" />
     <Compile Include="Interfaces\Repositories\IContactNumberRepository.cs" />
-    <Compile Include="Interfaces\Repositories\IContactRepository.cs" />
     <Compile Include="Interfaces\Repositories\IRepository.cs" />
-    <Compile Include="Interfaces\Repositories\IUserRepository.cs" />
     <Compile Include="Interfaces\Services\IContactNumberService.cs" />
     <Compile Include="Interfaces\Services\IContactService.cs" />
     <Compile Include="Interfaces\Services\IService.cs" />
     <Compile Include="Interfaces\Services\IUserService.cs" />
+    <Compile Include="Interfaces\UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="Model\Contact.cs" />
     <Compile Include="Model\ContactNumber.cs" />
     <Compile Include="Model\User.cs" />

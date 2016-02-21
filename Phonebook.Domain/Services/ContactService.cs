@@ -1,6 +1,7 @@
 ﻿using Phonebook.Domain.Exceptions;
 using Phonebook.Domain.Interfaces.Repositories;
 using Phonebook.Domain.Interfaces.Services;
+using Phonebook.Domain.Interfaces.UnitOfWork;
 using Phonebook.Domain.Model;
 using System;
 using System.Collections.Generic;
@@ -10,81 +11,84 @@ namespace Phonebook.Domain.Services
 {
     public class ContactService : IContactService
     {
-        private readonly IContactRepository _contactRepository;
-        private readonly IUserService _userService;
+		private readonly IUnitOfWork _unitOfWork;
 
-        public ContactService(IContactRepository contactRepository, IUserService userService)
+		public ContactService(IUnitOfWork unitOfWork)
         {
-            _contactRepository = contactRepository;
-            _userService = userService;
+			_unitOfWork = unitOfWork;
         }
 
-        public IList<Contact> GetAll()
+		public IQueryable<Contact> GetAll()
         {
-            return _contactRepository.GetAll();
+			return _unitOfWork.ContactRepository.GetAll();
         }
 
         public Contact Get(Guid id)
         {
-            return _contactRepository.Get(id);
+			return _unitOfWork.ContactRepository.Get(id);
         }
 
         public Guid Create(Contact model)
         {
-            var user = _userService.Get(model.UserId);
+			var user = _unitOfWork.UserRepository.Get(model.UserId);
 
             if (user == null) throw new ObjectNotFoundException("User");
 
-            var contact = _contactRepository.GetAll().SingleOrDefault(c => c.UserId == model.UserId && c.Email == model.Email);
+			var contact = _unitOfWork.ContactRepository.GetAll().SingleOrDefault(c => c.UserId == model.UserId && c.Email == model.Email);
 
             if (contact != null) throw new ObjectAlreadyExistException("Contact", "Email");
 
-            var id = _contactRepository.Create(model);
+			var id = _unitOfWork.ContactRepository.Create(model);
+
+			_unitOfWork.SaveChanges();
 
             return id;
         }
 
         public void Update(Contact model)
         {
-            if (_contactRepository.GetAll().Any(c => c.UserId == model.UserId && c.Id != model.Id && c.Email == model.Email))
+			if (_unitOfWork.ContactRepository.GetAll().Any(c => c.UserId == model.UserId && c.Id != model.Id && c.Email == model.Email))
             {
                 throw new ObjectAlreadyExistException("Contact", "Email");
             }
 
-            _contactRepository.Update(model);
+			_unitOfWork.ContactRepository.Update(model);
+
+			_unitOfWork.SaveChanges();
         }
 
         public void Delete(Guid id)
         {
-            _contactRepository.Delete(id);
+			_unitOfWork.ContactRepository.Delete(id);
+
+			_unitOfWork.SaveChanges();
         }
 
         public void Dispose()
         {
-            _contactRepository.Dispose();
-            _userService.Dispose();
+			_unitOfWork.Dispose();
         }
 
-        public IList<Contact> SearchContactsByName(Guid userId, string forename, string surname)
+		public IQueryable<Contact> SearchContactsByName(Guid userId, string forename, string surname)
         {
-            return _contactRepository.GetAll().Where(x => x.UserId == userId && x.Forename.Contains(forename) && x.Surname.Contains(surname)).ToList();
+			return _unitOfWork.ContactRepository.GetAll().Where(x => x.UserId == userId && x.Forename.Contains(forename) && x.Surname.Contains(surname));
         }
 
-        public IList<Contact> SearchContactsByEmail(Guid userId, string email)
+		public IQueryable<Contact> SearchContactsByEmail(Guid userId, string email)
         {
-            return _contactRepository.GetAll().Where(x => x.UserId == userId && x.Email.Contains(email)).ToList();
+			return _unitOfWork.ContactRepository.GetAll().Where(x => x.UserId == userId && x.Email.Contains(email));
         }
 
-        public IList<Contact> GetAllByUserId(Guid userId)
+		public IQueryable<Contact> GetAllByUserId(Guid userId)
         {
-            return _contactRepository.GetAll().Where(x => x.UserId == userId).ToList();
+			return _unitOfWork.ContactRepository.GetAll().Where(x => x.UserId == userId);
         }
 
-        public IList<Contact> Search(Guid userId, string name, string email)
+		public IQueryable<Contact> Search(Guid userId, string name, string email)
         {
             name = String.IsNullOrEmpty(name) ? "" : name;
             email = String.IsNullOrEmpty(email) ? "" : email;
-            return _contactRepository.GetAll().Where(x => x.UserId == userId && (x.Forename + " " + x.Surname).Contains(name) && x.Email.Contains(email)).ToList();
+			return _unitOfWork.ContactRepository.GetAll().Where(x => x.UserId == userId && (x.Forename + " " + x.Surname).Contains(name) && x.Email.Contains(email));
         }
     }
 }
