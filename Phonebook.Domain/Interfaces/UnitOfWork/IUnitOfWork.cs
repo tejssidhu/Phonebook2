@@ -10,8 +10,8 @@ namespace Phonebook.Domain.Interfaces.UnitOfWork
 {
 	public interface IUnitOfWork : IDisposable
 	{
-		IRepository<User> UserRepository { get; }
-		IRepository<Contact> ContactRepository { get; }
+		IGenericRepository<User> UserRepository { get; }
+		IGenericRepository<Contact> ContactRepository { get; }
 		IContactNumberRepository ContactNumberRepository { get; }
 		void SaveChanges();
 	}

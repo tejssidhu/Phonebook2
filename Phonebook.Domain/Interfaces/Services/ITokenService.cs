@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace Phonebook.Domain.Interfaces.Services
 {
-	public interface IContactNumberService : IService<ContactNumber>
+	public interface ITokenService
 	{
-		IEnumerable<ContactNumber> GetAllByContactId(Guid contactId);
+		Token GenerateToken(Guid userId);
+		bool ValidateToken(Guid tokenId);
+		bool Kill(Guid tokenId);
+		bool DeleteByUserId(Guid userId);
 	}
 }

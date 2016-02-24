@@ -163,13 +163,14 @@ namespace Phonebook.Data.Tests
 			};
 
 			//Act
-			Guid id = unitOfWork.UserRepository.Create(userToCreate);
+			unitOfWork.UserRepository.Create(userToCreate);
 			unitOfWork.SaveChanges();
-			User user = unitOfWork.UserRepository.Get(id);
+			User user = unitOfWork.UserRepository.Get(userToCreate.Id);
 
 			//Assert
+
 			Assert.AreEqual(UnProxy(user), userToCreate);
-			Assert.IsNotNull(id);
+			Assert.IsNotNull(userToCreate.Id);
 		}
 
 		[TestMethod]

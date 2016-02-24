@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Phonebook.Domain.Interfaces.Services
 {
-    public interface IContactService : IService<Contact>
-    {
-		IQueryable<Contact> Search(Guid userId, string name, string email);
-		IQueryable<Contact> GetAllByUserId(Guid userId);
-		IQueryable<Contact> SearchContactsByName(Guid userId, string forename, string surname);
-		IQueryable<Contact> SearchContactsByEmail(Guid userId, string email);
-    }
+	public interface IContactService : IService<Contact>
+	{
+		IEnumerable<Contact> Search(Guid userId, string name, string email);
+		IEnumerable<Contact> GetAllByUserId(Guid userId);
+		IEnumerable<Contact> SearchContactsByName(Guid userId, string forename, string surname);
+		IEnumerable<Contact> SearchContactsByEmail(Guid userId, string email);
+	}
 }

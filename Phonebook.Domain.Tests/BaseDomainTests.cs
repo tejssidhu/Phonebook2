@@ -1,31 +1,45 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Phonebook.Data.Context;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using Phonebook.Domain.Interfaces.Repositories;
+using Phonebook.Domain.Interfaces.UnitOfWork;
 using Phonebook.Domain.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Phonebook.Data.Repositories;
-using System.Data.Entity;
-using System.Data.Entity.Migrations;
-using Phonebook.Data;
-using Phonebook.Domain.Exceptions;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Phonebook.Data.Tests
+namespace Phonebook.Domain.Tests
 {
-	[TestClass]
-	public class ContatNumberRepositoryTests
+	public class BaseDomainTests
 	{
-		private List<User> _users;
-		private List<Contact> _contacts;
-		private List<ContactNumber> _contactNumbers;
+		public List<User> _users { get; set; }
+		public User _user { get; set; }
+		public Contact _contact { get; set; }
+		public List<Contact> _contacts { get; set; }
+		public ContactNumber _contactNumber { get; set; }
+		public List<ContactNumber> _contactNumbers { get; set; }
+		public Mock<IUnitOfWork> mockUnitOfWork;
+		public Mock<IGenericRepository<Contact>> mockContactRepository;
+		public Mock<IContactNumberRepository> mockContactNumberRepository;
+		public Mock<IGenericRepository<User>> mockUserRepository;
 
-		#region Test Initialise and Cleanup
 		[TestInitialize]
-		public void TestUserServiceTests()
+		public void SetupTestData()
 		{
+			_contactNumbers = new List<ContactNumber>();
+			_contacts = new List<Contact>();
+			_users = new List<User>();
+
+			_contactNumbers.Clear();
+			_contacts.Clear();
+			_users.Clear();
+			
+			_user = new User { Id = new Guid("26e31dde-4bcb-47d4-be80-958676c5cafd"), Password = "789", Username = "User789" };
+
 			var user1 = new User { Id = new Guid("7b8ceac1-9fb1-4e15-af4b-890b1f0c3ebf"), Password = "123", Username = "User123" };
 			var user2 = new User { Id = new Guid("5875412f-e8b8-493e-bd58-5df35083342c"), Password = "456", Username = "User456" };
-			var user3 = new User { Id = new Guid("26e31dde-4bcb-47d4-be80-958676c5cafd"), Password = "789", Username = "User789" };
 			var user4 = new User { Id = new Guid("cef70a7a-3349-4368-85ed-66b8c274fad1"), Password = "p6NY0hg", Username = "mjenkins0" };
 			var user5 = new User { Id = new Guid("71d8e924-7c58-4424-9e1b-b14eefa76abc"), Password = "5w7JhI42GLC", Username = "amartin1" };
 			var user6 = new User { Id = new Guid("a051d1ca-a3c5-45d4-be60-5bc5256ce83e"), Password = "3NypkQZSe", Username = "vallen2" };
@@ -35,13 +49,14 @@ namespace Phonebook.Data.Tests
 			var user10 = new User { Id = new Guid("16c6e264-0091-45f6-b9fd-02716d8d62dd"), Password = "3h7Vnh9rUpCl", Username = "cwheeler6" };
 			var user11 = new User { Id = new Guid("0d1a6711-e9eb-418e-adda-47a62a7900c9"), Password = "g8KhtQpk", Username = "bparker7" };
 
-			var contact1 = new Contact { Id = new Guid("81c4763c-b225-4756-903a-750064167813"), UserId = new Guid("26e31dde-4bcb-47d4-be80-958676c5cafd"), Forename = "Theresa", Surname = "Reyes", Email = "treyes0@goo.gl", Title = "Dr" };
+			_contact = new Contact { Id = new Guid("81c4763c-b225-4756-903a-750064167813"), UserId = new Guid("26e31dde-4bcb-47d4-be80-958676c5cafd"), Forename = "Theresa", Surname = "Reyes", Email = "treyes0@goo.gl", Title = "Dr" };
 			var contact2 = new Contact { Id = new Guid("cc772bf2-40bd-4b25-9e3a-0e80b1a63383"), UserId = new Guid("26e31dde-4bcb-47d4-be80-958676c5cafd"), Forename = "Pamela", Surname = "Wagner", Email = "pwagner1@ed.gov", Title = "Honorable" };
 			var contact3 = new Contact { Id = new Guid("6e7ca25f-d438-4076-b2bf-180fbffe809e"), UserId = new Guid("26e31dde-4bcb-47d4-be80-958676c5cafd"), Forename = "Steve", Surname = "Tucker", Email = "stucker2@tuttocitta.it", Title = "Mrs" };
 			var contact4 = new Contact { Id = new Guid("94669c7c-02f3-41a7-a8af-e6a3cee307bc"), UserId = new Guid("7b8ceac1-9fb1-4e15-af4b-890b1f0c3ebf"), Forename = "Sean", Surname = "Baker", Email = "sbaker3@noaa.gov", Title = "Honorable" };
 			var contact5 = new Contact { Id = new Guid("58c1eb1e-1513-4f19-97f3-d8571f97115f"), UserId = new Guid("7b8ceac1-9fb1-4e15-af4b-890b1f0c3ebf"), Forename = "Melissa", Surname = "Tucker", Email = "mtucker4@yale.edu", Title = "Mrs" };
 			var contact6 = new Contact { Id = new Guid("e3ee2f2b-3ace-4fd4-8ca7-7d6960f7a9fb"), UserId = new Guid("7b8ceac1-9fb1-4e15-af4b-890b1f0c3ebf"), Forename = "Shirley", Surname = "Graham", Email = "sgraham5@bbc.co.uk", Title = "Honorable" };
 			var contact7 = new Contact { Id = new Guid("2ae69661-72c6-4e33-a6ec-1ca93152fa80"), UserId = new Guid("5875412f-e8b8-493e-bd58-5df35083342c"), Forename = "Ashley", Surname = "Hunt", Email = "ahunt6@narod.ru", Title = "Rev" };
+
 			var contact8 = new Contact { Id = new Guid("c37f6cf4-bde1-4692-b4f5-b60826040209"), UserId = new Guid("5875412f-e8b8-493e-bd58-5df35083342c"), Forename = "Walter", Surname = "Riley", Email = "wriley7@dagondesign.com", Title = "Rev" };
 			var contact9 = new Contact { Id = new Guid("80a7852a-9e10-4148-b38e-5c7abee7415b"), UserId = new Guid("5875412f-e8b8-493e-bd58-5df35083342c"), Forename = "Jessica", Surname = "Dunn", Email = "jdunn8@ycombinator.com", Title = "Rev" };
 			var contact10 = new Contact { Id = new Guid("e8b71916-1a56-4c46-baeb-f5cec36a8344"), UserId = new Guid("5875412f-e8b8-493e-bd58-5df35083342c"), Forename = "Shirley", Surname = "Grant", Email = "sgrant9@liveinternet.ru", Title = "Honorable" };
@@ -89,175 +104,162 @@ namespace Phonebook.Data.Tests
 			var contact52 = new Contact { Id = new Guid("3f92501c-194b-4423-b780-64ecb4a11e2c"), UserId = new Guid("16c6e264-0091-45f6-b9fd-02716d8d62dd"), Forename = "Harry", Surname = "Gray", Email = "hgray1f@buzzfeed.com", Title = "Mr" };
 			var contact53 = new Contact { Id = new Guid("9d0f4fba-d3a8-40e8-9662-f09f6ad7d341"), UserId = new Guid("0d1a6711-e9eb-418e-adda-47a62a7900c9"), Forename = "Kenneth", Surname = "Olson", Email = "kolson1g@gizmodo.com", Title = "Mrs" };
 
-			var contactNumber7 = new ContactNumber { Id = new Guid("64aa5304-556f-4606-a118-03b43f46294b"), ContactId = new Guid("6e7ca25f-d438-4076-b2bf-180fbffe809e"), Description = "Mobile", TelephoneNumber = "188936967961" };
-			var contactNumber9 = new ContactNumber { Id = new Guid("b74b006e-f985-47a6-932a-051e3437e31f"), ContactId = new Guid("94669c7c-02f3-41a7-a8af-e6a3cee307bc"), Description = "Mobile", TelephoneNumber = "165328050436" };
-			var contactNumber4 = new ContactNumber { Id = new Guid("f5f162c8-33af-4ad2-b00d-1f618250401b"), ContactId = new Guid("cc772bf2-40bd-4b25-9e3a-0e80b1a63383"), Description = "Work", TelephoneNumber = "44167868359" };
-			var contactNumber12 = new ContactNumber { Id = new Guid("6ce58c67-b584-460f-8d5b-20cce37a4e90"), ContactId = new Guid("e3ee2f2b-3ace-4fd4-8ca7-7d6960f7a9fb"), Description = "Mobile", TelephoneNumber = "924308316065" };
-			var contactNumber8 = new ContactNumber { Id = new Guid("c94df269-db84-45a7-9b2a-47fffdbc3399"), ContactId = new Guid("94669c7c-02f3-41a7-a8af-e6a3cee307bc"), Description = "Home", TelephoneNumber = "427370908494" };
+			_contactNumber = new ContactNumber { Id = new Guid("9a005b3e-d9ec-4e08-aefa-589ab5e00bfa"), ContactId = new Guid("81c4763c-b225-4756-903a-750064167813"), Description = "Mobile", TelephoneNumber = "391714697203" };
 			var contactNumber2 = new ContactNumber { Id = new Guid("368b5e82-a019-4a4f-8f66-4bb670e6b769"), ContactId = new Guid("81c4763c-b225-4756-903a-750064167813"), Description = "Home", TelephoneNumber = "297724563901" };
-			var contactNumber1 = new ContactNumber { Id = new Guid("9a005b3e-d9ec-4e08-aefa-589ab5e00bfa"), ContactId = new Guid("81c4763c-b225-4756-903a-750064167813"), Description = "Mobile", TelephoneNumber = "391714697203" };
-			var contactNumber5 = new ContactNumber { Id = new Guid("FDA6127E-702B-4F32-9EC5-7F449DEABF11"), ContactId = new Guid("6E7CA25F-D438-4076-B2BF-180FBFFE809E"), Description = "Home", TelephoneNumber = "576800489823" };           
-			var contactNumber13 = new ContactNumber { Id = new Guid("8e9e8fe1-f9bf-482c-b1bd-77c1e472e683"), ContactId = new Guid("e3ee2f2b-3ace-4fd4-8ca7-7d6960f7a9fb"), Description = "Home", TelephoneNumber = "962474029779" };
-			var contactNumber6 = new ContactNumber { Id = new Guid("9d656825-9033-4be4-adef-a0dd9ebeef70"), ContactId = new Guid("6e7ca25f-d438-4076-b2bf-180fbffe809e"), Description = "Work", TelephoneNumber = "985888887522" };
 			var contactNumber3 = new ContactNumber { Id = new Guid("22b4f6e9-27c2-4636-b431-a37bdbc1b325"), ContactId = new Guid("cc772bf2-40bd-4b25-9e3a-0e80b1a63383"), Description = "Home", TelephoneNumber = "864785278888" };
-			var contactNumber14 = new ContactNumber { Id = new Guid("6fcceb1d-f27c-401f-bd95-f3519be6d6d4"), ContactId = new Guid("e3ee2f2b-3ace-4fd4-8ca7-7d6960f7a9fb"), Description = "Work", TelephoneNumber = "412115311830" };
+			var contactNumber4 = new ContactNumber { Id = new Guid("f5f162c8-33af-4ad2-b00d-1f618250401b"), ContactId = new Guid("cc772bf2-40bd-4b25-9e3a-0e80b1a63383"), Description = "Work", TelephoneNumber = "44167868359" };
+			var contactNumber5 = new ContactNumber { Id = new Guid("fda6127e-702b-4f32-9ec5-7f449deabf11"), ContactId = new Guid("6e7ca25f-d438-4076-b2bf-180fbffe809e"), Description = "Home", TelephoneNumber = "576800489823" };
+			var contactNumber6 = new ContactNumber { Id = new Guid("9d656825-9033-4be4-adef-a0dd9ebeef70"), ContactId = new Guid("6e7ca25f-d438-4076-b2bf-180fbffe809e"), Description = "Work", TelephoneNumber = "985888887522" };
+			var contactNumber7 = new ContactNumber { Id = new Guid("64aa5304-556f-4606-a118-03b43f46294b"), ContactId = new Guid("6e7ca25f-d438-4076-b2bf-180fbffe809e"), Description = "Mobile", TelephoneNumber = "188936967961" };
+			var contactNumber8 = new ContactNumber { Id = new Guid("c94df269-db84-45a7-9b2a-47fffdbc3399"), ContactId = new Guid("94669c7c-02f3-41a7-a8af-e6a3cee307bc"), Description = "Home", TelephoneNumber = "427370908494" };
+			var contactNumber9 = new ContactNumber { Id = new Guid("b74b006e-f985-47a6-932a-051e3437e31f"), ContactId = new Guid("94669c7c-02f3-41a7-a8af-e6a3cee307bc"), Description = "Mobile", TelephoneNumber = "165328050436" };
 			var contactNumber10 = new ContactNumber { Id = new Guid("6222209a-ce18-4d88-a7a5-27c8bd0ef92f"), ContactId = new Guid("58c1eb1e-1513-4f19-97f3-d8571f97115f"), Description = "Mobile", TelephoneNumber = "381792056593" };
 			var contactNumber11 = new ContactNumber { Id = new Guid("47f7f4e8-593c-4f6d-b1a5-1725e578ee86"), ContactId = new Guid("58c1eb1e-1513-4f19-97f3-d8571f97115f"), Description = "Home", TelephoneNumber = "632196085018" };
+			var contactNumber12 = new ContactNumber { Id = new Guid("6ce58c67-b584-460f-8d5b-20cce37a4e90"), ContactId = new Guid("e3ee2f2b-3ace-4fd4-8ca7-7d6960f7a9fb"), Description = "Mobile", TelephoneNumber = "924308316065" };
+			var contactNumber13 = new ContactNumber { Id = new Guid("8e9e8fe1-f9bf-482c-b1bd-77c1e472e683"), ContactId = new Guid("e3ee2f2b-3ace-4fd4-8ca7-7d6960f7a9fb"), Description = "Home", TelephoneNumber = "962474029779" };
+			var contactNumber14 = new ContactNumber { Id = new Guid("6fcceb1d-f27c-401f-bd95-f3519be6d6d4"), ContactId = new Guid("e3ee2f2b-3ace-4fd4-8ca7-7d6960f7a9fb"), Description = "Work", TelephoneNumber = "412115311830" };
 			var contactNumber15 = new ContactNumber { Id = new Guid("d8fc029d-8062-4cc4-ac29-e4339d1b48d3"), ContactId = new Guid("2ae69661-72c6-4e33-a6ec-1ca93152fa80"), Description = "Home", TelephoneNumber = "962216940411" };
 			var contactNumber16 = new ContactNumber { Id = new Guid("0be9339f-706d-4e34-9938-afc76c7e746f"), ContactId = new Guid("2ae69661-72c6-4e33-a6ec-1ca93152fa80"), Description = "Mobile", TelephoneNumber = "641533924552" };
 
-			_users = new List<User> { user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11 };
-			_contacts = new List<Contact> { contact1, contact2, contact3, contact4, contact5, contact6, contact7, contact8, contact9, contact10, contact11, contact12, contact13, contact14, contact15, contact16, contact17, contact18, contact19, contact20, contact21, contact22, contact23, contact24, contact25, contact26, contact27, contact28, contact29, contact31, contact32, contact33, contact34, contact35, contact36, contact37, contact38, contact39, contact40, contact41, contact42, contact43, contact44, contact45, contact46, contact47, contact48, contact49, contact50, contact51, contact52, contact53 };
-			_contactNumbers = new List<ContactNumber> { contactNumber1, contactNumber2, contactNumber3, contactNumber4, contactNumber5, contactNumber6, contactNumber7, contactNumber8, contactNumber9, contactNumber10, contactNumber11, contactNumber12, contactNumber13, contactNumber14, contactNumber15, contactNumber16 };
+			_contact.ContactNumbers = new List<ContactNumber> { _contactNumber, contactNumber2 };
+			contact2.ContactNumbers = new List<ContactNumber> { contactNumber3, contactNumber4 };
+			contact3.ContactNumbers = new List<ContactNumber> { contactNumber5, contactNumber6, contactNumber7 };
+			contact4.ContactNumbers = new List<ContactNumber> { contactNumber8, contactNumber9 };
+			contact5.ContactNumbers = new List<ContactNumber> { contactNumber10, contactNumber11 };
+			contact6.ContactNumbers = new List<ContactNumber> { contactNumber12, contactNumber13, contactNumber14 };
+			contact7.ContactNumbers = new List<ContactNumber> { contactNumber15, contactNumber16 };
 
-			PhonebookContext pbContext = new PhonebookContext();
+			_user.PhoneBook = new List<Contact> { _contact, contact2, contact3 };
+			user1.PhoneBook = new List<Contact> { contact4, contact5, contact6 };
+			user2.PhoneBook = new List<Contact> { contact7, contact8, contact9, contact10 };
+			user4.PhoneBook = new List<Contact> { contact11, contact12 };
+			user5.PhoneBook = new List<Contact> { contact13, contact14, contact15, contact16, contact17, contact18, contact19 };
+			user7.PhoneBook = new List<Contact> { contact20, contact21, contact22, contact23, contact24, contact25, contact26, contact27, contact28, contact29, contact30 };
+			user8.PhoneBook = new List<Contact> { contact31, contact32 };
+			user9.PhoneBook = new List<Contact> { contact33, contact34, contact35, contact36, contact37, contact38, contact39, contact40, contact41, contact42, contact43, contact44, contact45 };
+			user10.PhoneBook = new List<Contact> { contact46, contact47, contact48, contact49, contact50, contact51, contact52 };
+			user11.PhoneBook = new List<Contact> { contact53 };
 
-			ReSeed.Up(pbContext);
+			_users = new List<User> { user1, user2, _user, user4, user5, user6, user7, user8, user9, user10, user11 };
+			_contacts = new List<Contact> { _contact, contact2, contact3, contact4, contact5, contact6, contact7, contact8, contact9, contact10, contact11, contact12, contact13, contact14, contact15, contact16, contact17, contact18, contact19, contact20, contact21, contact22, contact23, contact24, contact25, contact26, contact27, contact28, contact29, contact31, contact32, contact33, contact34, contact35, contact36, contact37, contact38, contact39, contact40, contact41, contact42, contact43, contact44, contact45, contact46, contact47, contact48, contact49, contact50, contact51, contact52, contact53 };
+			_contactNumbers = new List<ContactNumber> { _contactNumber, contactNumber2, contactNumber3, contactNumber4, contactNumber5, contactNumber6, contactNumber7, contactNumber8, contactNumber9, contactNumber10, contactNumber11, contactNumber12, contactNumber13, contactNumber14, contactNumber15, contactNumber16 };
+
+			SetupMocks();
 		}
 
+		#region private methods
+
+		public void SetupMocks()
+		{
+			mockUnitOfWork = new Mock<IUnitOfWork>();
+			mockUserRepository = new Mock<IGenericRepository<User>>();
+			mockContactRepository = new Mock<IGenericRepository<Contact>>();
+			mockContactNumberRepository = new Mock<IContactNumberRepository>();
+
+			mockUnitOfWork.Setup(x => x.ContactNumberRepository).Returns(mockContactNumberRepository.Object);
+			mockUnitOfWork.Setup(x => x.ContactRepository).Returns(mockContactRepository.Object);
+			mockUnitOfWork.Setup(x => x.UserRepository).Returns(mockUserRepository.Object);
+
+			mockContactRepository.Setup(x => x.Get(
+				It.IsAny<Guid>()))
+				.Returns(
+					new Func<Guid, Contact>((arg1) =>
+					{
+
+						IQueryable<Contact> query = _contacts.AsQueryable();
+
+						return query.Where(c => c.Id == arg1).FirstOrDefault();
+					}));
+
+			mockUserRepository.Setup(x => x.Get(
+				It.IsAny<Guid>()))
+				.Returns(
+				new Func<Guid, User>((arg1) =>
+				{
+					IQueryable<User> query = _users.AsQueryable();
+
+					return query.Where(c => c.Id == arg1).FirstOrDefault();
+				}));
+
+			mockUserRepository.Setup(x => x.GetAll(
+				It.IsAny<Expression<Func<User, bool>>>(),
+				It.IsAny<Func<IQueryable<User>, IOrderedQueryable<User>>>(),
+				It.IsAny<string>()))
+				.Returns(new Func<Expression<Func<User, bool>>,
+					Func<IQueryable<User>, IOrderedQueryable<User>>,
+					string, IEnumerable<User>>((arg1, arg2, arg3) =>
+					{
+						IQueryable<User> query = _users.AsQueryable();
+
+						if (arg1 != null)
+						{
+							query = query.Where(arg1);
+						}
+
+						if (arg2 != null)
+						{
+							return arg2(query).ToList();
+						}
+						else
+						{
+							return query.ToList();
+						}
+
+					}));
+
+			mockContactRepository.Setup(x => x.GetAll(
+				It.IsAny<Expression<Func<Contact, bool>>>(),
+				It.IsAny<Func<IQueryable<Contact>, IOrderedQueryable<Contact>>>(),
+				It.IsAny<string>()))
+				.Returns(new Func<Expression<Func<Contact, bool>>,
+					Func<IQueryable<Contact>, IOrderedQueryable<Contact>>,
+					string, IEnumerable<Contact>>((arg1, arg2, arg3) =>
+					{
+						IQueryable<Contact> query = _contacts.AsQueryable();
+
+						if (arg1 != null)
+						{
+							query = query.Where(arg1);
+						}
+
+						if (arg2 != null)
+						{
+							return arg2(query).ToList();
+						}
+						else
+						{
+							return query.ToList();
+						}
+
+					}));
+
+			mockContactNumberRepository.Setup(x => x.GetAll(
+				It.IsAny<Expression<Func<ContactNumber, bool>>>(),
+				It.IsAny<Func<IQueryable<ContactNumber>, IOrderedQueryable<ContactNumber>>>(),
+				It.IsAny<string>()))
+				.Returns(new Func<Expression<Func<ContactNumber, bool>>,
+					Func<IQueryable<ContactNumber>, IOrderedQueryable<ContactNumber>>,
+					string, IEnumerable<ContactNumber>>((arg1, arg2, arg3) =>
+					{
+						IQueryable<ContactNumber> query = _contactNumbers.AsQueryable();
+
+						if (arg1 != null)
+						{
+							query = query.Where(arg1);
+						}
+
+						if (arg2 != null)
+						{
+							return arg2(query).ToList();
+						}
+						else
+						{
+							return query.ToList();
+						}
+
+					}));
+
+		}
 		#endregion
-
-		[TestMethod]
-		public void GetAllOnContactNumberRepository()
-		{
-			//Arrange
-			UnitOfWork unitOfWork = new UnitOfWork();
-
-			//Act
-			List<ContactNumber> contactNumbers = unitOfWork.ContactNumberRepository.GetAll().ToList();
-
-			List<ContactNumber> unProxiedContactNumbers = new List<ContactNumber>();
-			foreach (var cn in contactNumbers)
-			{
-				unProxiedContactNumbers.Add(UnProxy(cn));
-			}
-			_contactNumbers = _contactNumbers.OrderBy(c => c.Description).ThenBy(n => n.TelephoneNumber).ToList();
-			unProxiedContactNumbers = unProxiedContactNumbers.OrderBy(c => c.Description).ThenBy(n => n.TelephoneNumber).ToList();
-
-			//Assert
-			CollectionAssert.AreEqual(_contactNumbers, unProxiedContactNumbers);
-
-			unitOfWork.Dispose();
-		}
-
-		[TestMethod]
-		public void GetOnContactNumberRepository()
-		{
-			//Arrange
-			UnitOfWork unitOfWork = new UnitOfWork();
-
-			//Act
-			ContactNumber contactNumber = unitOfWork.ContactNumberRepository.Get(new Guid("9a005b3e-d9ec-4e08-aefa-589ab5e00bfa"));
-
-			//Assert
-			Assert.AreEqual(_contactNumbers[0], UnProxy(contactNumber));
-
-			unitOfWork.Dispose();
-		}
-
-		[TestMethod]
-		public void CreateOnContactNumberRepository()
-		{
-			//Arrange
-			UnitOfWork unitOfWork = new UnitOfWork();
-
-			var contactNumberToCreate = new ContactNumber
-			{
-				ContactId = new Guid("cc772bf2-40bd-4b25-9e3a-0e80b1a63383"),
-				Description = "Mobile",
-				TelephoneNumber = "0123456789"
-			};
-
-			//Act
-			unitOfWork.ContactNumberRepository.Create(contactNumberToCreate);
-			unitOfWork.SaveChanges();
-			ContactNumber contactNumber = unitOfWork.ContactNumberRepository.Get(contactNumberToCreate.Id);
-
-			//Assert
-			Assert.AreEqual(UnProxy(contactNumber), contactNumberToCreate);
-			Assert.IsNotNull(contactNumberToCreate.Id);
-			
-			unitOfWork.Dispose();
-		}
-
-		[TestMethod]
-		public void UpdateOnContactNumberRepository()
-		{
-			//Arrange
-			UnitOfWork unitOfWork = new UnitOfWork();
-
-			var contactNumberToUpdate = _contactNumbers[3];
-			contactNumberToUpdate.Description = "Mobile" + "Updated";
-			contactNumberToUpdate.TelephoneNumber = "0123456789" + "Updated";
-
-			//Act
-			unitOfWork.ContactNumberRepository.Update(contactNumberToUpdate);
-			unitOfWork.SaveChanges();
-			ContactNumber contactNumber = unitOfWork.ContactNumberRepository.Get(contactNumberToUpdate.Id);
-			
-			//Assert
-			Assert.AreEqual(UnProxy(contactNumber), contactNumberToUpdate);
-
-			unitOfWork.Dispose();
-		}
-
-		[TestMethod]
-		[ExpectedException(typeof(ObjectNotFoundException))]
-		public void DeleteOnContactNumberRepositoryNotExisting()
-		{
-			//Arrange
-			UnitOfWork unitOfWork = new UnitOfWork();
-
-			//Act
-			unitOfWork.ContactNumberRepository.Delete(new Guid());
-			
-			//Assert -- expected exception
-		}
-
-		[TestMethod]
-		public void DeleteOnContactNumberRepository()
-		{
-			//Arrange
-			UnitOfWork unitOfWork = new UnitOfWork();
-
-			var contactNumberToDelete = _contactNumbers[3];
-
-			//Act
-			unitOfWork.ContactNumberRepository.Delete(contactNumberToDelete.Id);
-			unitOfWork.SaveChanges();
-			ContactNumber contactNumber = unitOfWork.ContactNumberRepository.Get(contactNumberToDelete.Id);
-
-			//Assert
-			Assert.IsNull(contactNumber);
-		}
-
-		[TestMethod]
-		public void DeleteByContactIdOnContactNumberRepository()
-		{
-			//Arrange
-			UnitOfWork unitOfWork = new UnitOfWork();
-
-			var contactNumberToDelete = _contactNumbers[3];
-
-			//Act
-			unitOfWork.ContactNumberRepository.DeleteContactNumbersByContactId(contactNumberToDelete.ContactId);
-			unitOfWork.SaveChanges();
-			int numOfContactNumbers = unitOfWork.ContactRepository.Get(contactNumberToDelete.ContactId).ContactNumbers.Count;
-
-			//Assert
-			Assert.AreEqual(0, numOfContactNumbers);
-		}
-
-		private ContactNumber UnProxy(dynamic proxiedType)
-		{
-			ContactNumber contactNumber = new ContactNumber();
-
-			contactNumber.Id = proxiedType.Id;
-			contactNumber.ContactId = proxiedType.ContactId;
-			contactNumber.Description = proxiedType.Description;
-			contactNumber.TelephoneNumber = proxiedType.TelephoneNumber;
-
-			return contactNumber;
-		}
 	}
 }

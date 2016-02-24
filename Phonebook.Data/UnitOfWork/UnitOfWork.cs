@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Phonebook.Data
 {
-	public class UnitOfWork : IUnitOfWork
+	public class UnitOfWork : IUnitOfWork, IDisposable
 	{
 		private readonly PhonebookContext _phonebookContext;
 
@@ -19,13 +19,13 @@ namespace Phonebook.Data
 		{
 			_phonebookContext = new PhonebookContext();
 
-			UserRepository = new UserRepository(_phonebookContext);
-			ContactRepository = new ContactRepository(_phonebookContext);
+			UserRepository = new GenericRepository<User>(_phonebookContext);
+			ContactRepository = new GenericRepository<Contact>(_phonebookContext);
 			ContactNumberRepository = new ContactNumberRepository(_phonebookContext);
 		}
 
-		public IRepository<User> UserRepository { get; private set; }
-		public IRepository<Contact> ContactRepository { get; private set; }
+		public IGenericRepository<User> UserRepository { get; private set; }
+		public IGenericRepository<Contact> ContactRepository { get; private set; }
 		public IContactNumberRepository ContactNumberRepository { get; private set; }
 
 		public void SaveChanges()

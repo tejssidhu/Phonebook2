@@ -5,56 +5,83 @@ using System.Collections.Generic;
 using System.Linq;
 using Phonebook.Domain.Model;
 using Phonebook.Domain.Exceptions;
+using System.Linq.Expressions;
+using System.Data.Entity;
 
 namespace Phonebook.Data.Repositories
 {
 	public class ContactNumberRepository : IContactNumberRepository
 	{
 		private readonly PhonebookContext _phonebookContext;
+		private DbSet<ContactNumber> dbSet;
 
 		public ContactNumberRepository(PhonebookContext phonebookContext)
 		{
 			_phonebookContext = phonebookContext;
+			dbSet = _phonebookContext.Set<ContactNumber>();
 		}
 
-		public IQueryable<ContactNumber> GetAll()
+		public IEnumerable<ContactNumber> GetAll(
+		  Expression<Func<ContactNumber, bool>> filter = null,
+		  Func<IQueryable<ContactNumber>, IOrderedQueryable<ContactNumber>> orderBy = null,
+		  string includeProperties = "")
 		{
-			return _phonebookContext.ContactNumbers;
+			IQueryable<ContactNumber> query = dbSet;
+
+			if (filter != null)
+			{
+				query = query.Where(filter);
+			}
+
+			foreach (var includeProperty in includeProperties.Split
+				(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+			{
+				query = query.Include(includeProperty);
+			}
+
+			if (orderBy != null)
+			{
+				return orderBy(query).ToList();
+			}
+			else
+			{
+				return query.ToList();
+			}
 		}
 
 		public ContactNumber Get(Guid id)
 		{
-			return _phonebookContext.ContactNumbers.FirstOrDefault(cn => cn.Id == id);
+			return dbSet.Find(id);
 		}
 
-		public Guid Create(ContactNumber model)
+		public void Create(ContactNumber model)
 		{
-			model.Id = Guid.NewGuid();
-
-			_phonebookContext.ContactNumbers.Add(model);
-
-			return model.Id;
+			dbSet.Add(model);
 		}
 
 		public void Update(ContactNumber model)
 		{
-			var contactNumber = Get(model.Id);
-
-			if (contactNumber != null)
-			{
-				contactNumber.Description = model.Description;
-				contactNumber.TelephoneNumber = model.TelephoneNumber;
-			}
+			dbSet.Attach(model);
+			_phonebookContext.Entry(model).State = EntityState.Modified;
 		}
 
 		public void Delete(Guid id)
 		{
-			var contactToDelete = _phonebookContext.ContactNumbers.FirstOrDefault(cn => cn.Id == id);
+			ContactNumber entityToDelete = dbSet.Find(id);
 
-			if (contactToDelete == null)
+			if (entityToDelete == null)
 				throw new ObjectNotFoundException("Contact");
 
-			_phonebookContext.ContactNumbers.Remove(contactToDelete);
+			Delete(entityToDelete);
+		}
+
+		public void Delete(ContactNumber model)
+		{
+			if (_phonebookContext.Entry(model).State == EntityState.Detached)
+			{
+				dbSet.Attach(model);
+			}
+			dbSet.Remove(model);
 		}
 
 		public void DeleteContactNumbersByContactId(Guid contactId)
@@ -63,7 +90,7 @@ namespace Phonebook.Data.Repositories
 
 			foreach (var contactNumber in contactNumbers)
 			{
-				_phonebookContext.ContactNumbers.Remove(contactNumber);
+				Delete(contactNumber);
 			}
 		}
 	}

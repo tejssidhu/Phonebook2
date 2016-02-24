@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,19 +44,23 @@
     <Compile Include="Exceptions\InvalidPasswordException.cs" />
     <Compile Include="Exceptions\ObjectAlreadyExistException.cs" />
     <Compile Include="Exceptions\ObjectNotFoundException.cs" />
+    <Compile Include="Interfaces\Model\IEntity.cs" />
     <Compile Include="Interfaces\Repositories\IContactNumberRepository.cs" />
-    <Compile Include="Interfaces\Repositories\IRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IGenericRepository.cs" />
     <Compile Include="Interfaces\Services\IContactNumberService.cs" />
     <Compile Include="Interfaces\Services\IContactService.cs" />
     <Compile Include="Interfaces\Services\IService.cs" />
+    <Compile Include="Interfaces\Services\ITokenService.cs" />
     <Compile Include="Interfaces\Services\IUserService.cs" />
     <Compile Include="Interfaces\UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="Model\Contact.cs" />
     <Compile Include="Model\ContactNumber.cs" />
+    <Compile Include="Model\Token.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ContactNumberService.cs" />
     <Compile Include="Services\ContactService.cs" />
+    <Compile Include="Services\TokenService.cs" />
     <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup />

@@ -174,14 +174,14 @@ namespace Phonebook.Data.Tests
 			};
 
 			//Act
-			Guid id = unitOfWork.ContactRepository.Create(contactToCreate);
+			unitOfWork.ContactRepository.Create(contactToCreate);
 			unitOfWork.SaveChanges();
 
-			Contact contact = unitOfWork.ContactRepository.Get(id);
+			Contact contact = unitOfWork.ContactRepository.Get(contactToCreate.Id);
 
 			//Assert
 			Assert.AreEqual(contact, contactToCreate);
-			Assert.IsNotNull(id);
+			Assert.IsNotNull(contactToCreate.Id);
 
 			unitOfWork.Dispose();
 		}

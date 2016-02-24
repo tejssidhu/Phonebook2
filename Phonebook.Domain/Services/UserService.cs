@@ -23,7 +23,7 @@ namespace Phonebook.Domain.Services
 			_unitOfWork.Dispose();
         }
 
-		public IQueryable<User> GetAll()
+		public IEnumerable<User> GetAll()
         {
 			return _unitOfWork.UserRepository.GetAll();
         }
@@ -35,20 +35,19 @@ namespace Phonebook.Domain.Services
 
         public Guid Create(User model)
         {
-			var user = _unitOfWork.UserRepository.GetAll().SingleOrDefault(u => u.Username == model.Username);
+			var user = _unitOfWork.UserRepository.GetAll(u => u.Username == model.Username).SingleOrDefault();
 
             if (user != null) throw new ObjectAlreadyExistException("User");
 
-			var id = _unitOfWork.UserRepository.Create(model);
-
+			_unitOfWork.UserRepository.Create(model);
 			_unitOfWork.SaveChanges();
 
-            return id;
+			return model.Id;
         }
 
         public void Update(User model)
         {
-            if (_unitOfWork.UserRepository.GetAll().Any(u => u.Username == model.Username && u.Id != model.Id))
+			if (_unitOfWork.UserRepository.GetAll(u => u.Username == model.Username && u.Id != model.Id).Any())
             {
                 throw new ObjectAlreadyExistException("User", "username");
             }
@@ -67,7 +66,7 @@ namespace Phonebook.Domain.Services
 
         public User Authenticate(string username, string password)
         {
-			var user = _unitOfWork.UserRepository.GetAll().SingleOrDefault(u => u.Username == username);
+			var user = _unitOfWork.UserRepository.GetAll(u => u.Username == username).SingleOrDefault();
 
             if (user == null) throw new ObjectNotFoundException("User");
 
