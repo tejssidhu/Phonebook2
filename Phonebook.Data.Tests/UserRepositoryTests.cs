@@ -208,6 +208,23 @@ namespace Phonebook.Data.Tests
 			Assert.IsNull(user);
 		}
 
+		[TestMethod]
+		public void DeleteMultipleOnUserRepository()
+		{
+			//Arrange
+			UnitOfWork unitOfWork = new UnitOfWork();
+
+			//Act
+			unitOfWork.UserRepository.DeleteMany(t => t.Username == "User123" || t.Username == "User789");
+			unitOfWork.SaveChanges();
+
+			bool anyStillExist = unitOfWork.UserRepository.GetAll(t => t.Username.Contains("User")).Any();
+			
+			//Assert
+			Assert.AreEqual(anyStillExist, false);
+		}
+
+
 		private User UnProxy(dynamic proxiedType)
 		{
 			User user = new User();

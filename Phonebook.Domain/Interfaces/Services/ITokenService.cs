@@ -10,8 +10,8 @@ namespace Phonebook.Domain.Interfaces.Services
 	public interface ITokenService
 	{
 		Token GenerateToken(Guid userId);
-		bool ValidateToken(Guid tokenId);
-		bool Kill(Guid tokenId);
+		bool ValidateToken(string tokenId);
+		bool Kill(string tokenId);
 		bool DeleteByUserId(Guid userId);
 	}
 }

@@ -13,6 +13,7 @@ namespace Phonebook.Domain.Interfaces.UnitOfWork
 		IGenericRepository<User> UserRepository { get; }
 		IGenericRepository<Contact> ContactRepository { get; }
 		IContactNumberRepository ContactNumberRepository { get; }
+		IGenericRepository<Token> TokenRepository { get; }
 		void SaveChanges();
 	}
 }

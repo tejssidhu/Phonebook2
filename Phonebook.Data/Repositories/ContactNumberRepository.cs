@@ -93,5 +93,15 @@ namespace Phonebook.Data.Repositories
 				Delete(contactNumber);
 			}
 		}
+
+		public virtual void DeleteMany(Expression<Func<ContactNumber, bool>> filter)
+		{
+			var itemsToDelete = GetAll(filter);
+
+			foreach (var item in itemsToDelete)
+			{
+				Delete(item);
+			}
+		}
 	}
 }

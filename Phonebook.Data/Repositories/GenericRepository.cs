@@ -81,5 +81,15 @@ namespace Phonebook.Data.Repositories
 
 			dbSet.Remove(entityToDelete);
 		}
+
+		public virtual void DeleteMany(Expression<Func<TEntity, bool>> filter)
+		{
+			var itemsToDelete = GetAll(filter);
+
+			foreach (var item in itemsToDelete)
+			{
+				Delete(item);
+			}
+		}
 	}
 }
