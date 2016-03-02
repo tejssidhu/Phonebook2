@@ -9,27 +9,51 @@ using Phonebook.Domain.Model;
 using Phonebook.WebApi.Models;
 using Phonebook.WebApi.Filters;
 using System.Threading;
+using System.Configuration;
 
 namespace Phonebook.WebApi.Controllers
 {
-	[ApiAuthenticationFilter]
-    public class LogonController : ApiController
-    {
-		private readonly IUserService _userService;
+	
+	public class LogonController : ApiController
+	{
+		private readonly ITokenService _tokenService;
 
-		public LogonController(IUserService userService)
-        {
-            _userService = userService;
-        }
-
-		public IHttpActionResult Logon(LogonModel model)
+		public LogonController(ITokenService tokenService)
 		{
-			return Ok(Thread.CurrentPrincipal.Identity);
+			_tokenService = tokenService;
+		}
+
+		[ApiAuthenticationFilter]
+		public HttpResponseMessage Logon(LogonModel model)
+		{
+			if (System.Threading.Thread.CurrentPrincipal != null && System.Threading.Thread.CurrentPrincipal.Identity.IsAuthenticated)
+			{
+				var basicAuthId = System.Threading.Thread.CurrentPrincipal.Identity as BasicAuthenticationIdentity;
+				if (basicAuthId != null)
+				{
+					var userId = basicAuthId.UserId;
+					return GetAuthToken(userId);
+				}
+			}
+
+			return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+		}
+
+		private HttpResponseMessage GetAuthToken(Guid userId)
+		{
+			var token = _tokenService.GenerateToken(userId);
+
+			HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+			response.Headers.Add("Token", token.AuthToken);
+			response.Headers.Add("TokenExpiry", ConfigurationManager.AppSettings["AuthTokenExpiry"]);
+			response.Headers.Add("Access-Control-Expose-Headers", "Token,TokenExpiry");
+
+			return response;
 		}
 		
 		public void Dispose()
 		{
-			_userService.Dispose();
+			_tokenService.Dispose();
 		}
 	}
 }

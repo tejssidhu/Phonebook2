@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Phonebook.Domain.Interfaces.Services
 {
-	public interface ITokenService
+	public interface ITokenService : IDisposable
 	{
 		Token GenerateToken(Guid userId);
 		bool ValidateToken(string tokenId);
