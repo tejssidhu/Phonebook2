@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
 using Phonebook.WebApi.DependencyResolution;
-using WebApiContrib.IoC.StructureMap;
+using StructureMap;
 
 namespace Phonebook.WebApi
 {

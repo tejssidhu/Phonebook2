@@ -1,4 +1,5 @@
 ﻿using StructureMap;
+using StructureMap.Graph;
 using Phonebook.Data.Context;
 using System.Diagnostics;
 
@@ -21,14 +22,6 @@ namespace Phonebook.WebApi.DependencyResolution
 			Debug.WriteLine(container.WhatDoIHave());
 
 			return container;
-		}
-
-		public static string GetPath()
-		{
-			if ((System.Web.HttpRuntime.AppDomainAppVirtualPath).EndsWith("\\"))
-				return System.Web.HttpRuntime.AppDomainAppVirtualPath;
-			else
-				return System.Web.HttpRuntime.AppDomainAppVirtualPath + "\\";
 		}
 	}
 }

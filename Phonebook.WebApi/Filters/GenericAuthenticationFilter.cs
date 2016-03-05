@@ -7,6 +7,7 @@ using System.Web.Http.Controllers;
 using System.Threading;
 using System.Text;
 using System.Net;
+using System.Net.Http;
 using System.Security.Principal;
 
 namespace Phonebook.WebApi.Filters
@@ -55,9 +56,14 @@ namespace Phonebook.WebApi.Filters
 
 			if (!OnAuthorizeUser(identity.Name, identity.Password, filterContext))
 			{
+				Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity(""), new string[0]);
+
 				ChallengeAuthRequest(filterContext);
+
 				return;
 			}
+
+
 
 			base.OnAuthorization(filterContext);
 		}
@@ -103,7 +109,7 @@ namespace Phonebook.WebApi.Filters
 		{
 			var dnsHost = filterContext.Request.RequestUri.DnsSafeHost;
 
-			filterContext.Response.StatusCode = HttpStatusCode.Unauthorized;
+			filterContext.Response = filterContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
 			filterContext.Response.Headers.Add("WWW-Authenticate", string.Format("Basic realm=\"{0}\"", dnsHost));
 		}
 	}
