@@ -20,6 +20,7 @@ namespace Phonebook.UI
 			WebApiConfig.Register(GlobalConfiguration.Configuration);
 			FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
 			RouteConfig.RegisterRoutes(RouteTable.Routes);
+			ViewEngines.Engines.Add(new RazorViewEngine());
 		}
 	}
 }

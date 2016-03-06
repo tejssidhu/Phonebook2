@@ -14,5 +14,7 @@ namespace Phonebook.UI.Models
 		[Required]
 		[MaxLength(255)]
 		public string Password { get; set; }
+
+		public bool LoggedOn { get; set; }
 	}
 }

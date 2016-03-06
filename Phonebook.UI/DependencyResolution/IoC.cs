@@ -19,19 +19,25 @@ using StructureMap;
 using StructureMap.Graph;
 using Phonebook.Data.Context;
 using StructureMap.Graph;
+using System.Diagnostics;
 
 namespace Phonebook.UI.DependencyResolution {
     public static class IoC {
-        public static IContainer Initialize() {
-            ObjectFactory.Initialize(x =>
-                        {
-                            x.Scan(scan =>
-                                    {
-										scan.AssembliesFromApplicationBaseDirectory();
-                                        scan.WithDefaultConventions();
-                                    });
-                        });
-            return ObjectFactory.Container;
-        }
+		public static IContainer Initialize()
+		{
+			var container = new Container();
+			container.Configure(x =>
+			{
+				x.Scan(scan =>
+				{
+					scan.WithDefaultConventions();
+					scan.AssembliesFromApplicationBaseDirectory();
+				});
+			});
+
+			Debug.WriteLine(container.WhatDoIHave());
+
+			return container;
+		}
     }
 }

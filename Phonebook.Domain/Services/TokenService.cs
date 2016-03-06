@@ -38,6 +38,7 @@ namespace Phonebook.Domain.Services
 
 			var token = new Token
 			{
+				Id = Guid.NewGuid(),
 				UserId = userId,
 				AuthToken = authToken,
 				IssuedOn = issuedOn,

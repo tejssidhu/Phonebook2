@@ -35,11 +35,16 @@
 		return "Basic " + hash;
 	}
 
-	function logonSuccess(data) {
+	function logonSuccess(data, textStatus, jqXHR) {
+		var data = {
+			Id: jqXHR.getResponseHeader("UserId"),
+			Token: jqXHR.getResponseHeader("Token")
+		};
+
 		service.trigger('authenticationService:logonSuccess', data);
 	}
 
-	function logonFail(jqXHR) {
+	function logonFail(jqXHR, textStatus, errorThrown) {
 		var error = jqXHR.responseText ? JSON.parse(jqXHR.responseText) : jqXHR.statusText;
 		service.trigger('authenticationService:logonFail', error);
 	}
