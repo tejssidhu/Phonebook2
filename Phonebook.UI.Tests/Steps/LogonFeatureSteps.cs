@@ -1,9 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Phonebook.UI.Tests.Drivers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using TechTalk.SpecFlow;
 
 namespace Phonebook.UI.Tests.Steps
@@ -57,7 +53,5 @@ namespace Phonebook.UI.Tests.Steps
 		{
 			ScenarioContext.Current.Pending();
 		}
-
-
 	}
 }

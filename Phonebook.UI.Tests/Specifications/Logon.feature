@@ -7,16 +7,20 @@ Feature: Logon
 Background: 
 	Given I am on the Phonebook logon page
 
-Scenario Outline: Unauhorised Message
-	When I logon as a user with username: '<username>' and password: '<password>'
+Scenario: When wrong password is entered, an Unauthorised error message is shown and the user is not logged in
+	When I logon as a user with username: 'User123' and password: 'wrong'
 	Then I am left on the logon page
 	And A logon error message of "Unauthorised" is shown
 
-	Examples: 
-	|username	|password	|
-	|User123	|wrong		|
-	|abc		|123		|
-	|User123	|			|
+Scenario: When wrong username is entered, an Unauthorised error message is shown and the user is not logged in
+	When I logon as a user with username: 'abc' and password: '123'
+	Then I am left on the logon page
+	And A logon error message of "Unauthorised" is shown
+
+Scenario: When no password is entered, an Unauthorised error message is shown and the user is not logged in
+	When I logon as a user with username: 'User123' and password: ''
+	Then I am left on the logon page
+	And A logon error message of "Unauthorised" is shown
 
 Scenario: Login page is displayed correctly
 	Then The login page is displayed correctly
