@@ -11,17 +11,25 @@ namespace Phonebook.UI.Tests.Steps
 	[Binding]
 	public class LogonFeatureSteps
 	{
+		//private ILoginDriver LoginDriver { get; set; }
+
+		//public LogonFeatureSteps(ILoginDriver loginDriver)
+		//{
+		//	LoginDriver = loginDriver;
+		//}
 
 		[Given(@"I am on the Phonebook logon page")]
 		public void GivenIAmOnThePhonebookLogonPage()
 		{
-			//ScenarioContext.Current.Pending();
+			WebBrowser.Current.Navigate().GoToUrl("http://localhost/phonebook");
 		}
 
-		[When(@"I logon as a user with username: ""(.*)"" and password: ""(.*)""")]
+		[When(@"I logon as a user with username: '(.*)' and password: '(.*)'")]
 		public void WhenILogonAsAUserWithUsernameAndPassword(string username, string password)
 		{
-			ScenarioContext.Current.Pending();
+			var loginPage = new LoginDriver();
+
+			loginPage.Logon(username, password);
 		}
 
 		[Then(@"The login page is displayed correctly")]
@@ -37,15 +45,11 @@ namespace Phonebook.UI.Tests.Steps
 		}
 
 		[Then(@"A logon error message of ""(.*)"" is shown")]
-		public void ThenALogonErrorMessageOfIsShown(string p0)
+		public void ThenALogonErrorMessageOfIsShown(string errorMessage)
 		{
-			ScenarioContext.Current.Pending();
-		}
+			var loginPage = new LoginDriver();
 
-		[Then(@"A logon error icon is displayed for ""(.*)""")]
-		public void ThenALogonErrorIconIsDisplayedFor(string p0)
-		{
-			ScenarioContext.Current.Pending();
+			Assert.AreEqual(errorMessage, loginPage.GetLogonErrorMessage());
 		}
 
 		[Then(@"The user's home page is displayed")]

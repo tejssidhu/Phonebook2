@@ -30,7 +30,8 @@ namespace Phonebook.UI.Tests.Specifications
         public static void FeatureSetup(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext testContext)
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner(null, 0);
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Logon", "\tIn order to access Phoneapp\r\n\tAs a Phoneapp User\r\n\tI want to be able to Logon", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Logon", "\tIn order to access Phoneapp\r\n\tAs a Phoneapp User\r\n\tI want to be able to Logon", ProgrammingLanguage.CSharp, new string[] {
+                        "LogonTest"});
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -69,120 +70,81 @@ namespace Phonebook.UI.Tests.Specifications
         
         public virtual void FeatureBackground()
         {
-#line 6
 #line 7
+#line 8
  testRunner.Given("I am on the Phonebook logon page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+        }
+        
+        public virtual void UnauhorisedMessage(string username, string password, string[] exampleTags)
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Unauhorised Message", exampleTags);
+#line 10
+this.ScenarioSetup(scenarioInfo);
+#line 7
+this.FeatureBackground();
+#line 11
+ testRunner.When(string.Format("I logon as a user with username: \'{0}\' and password: \'{1}\'", username, password), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 12
+ testRunner.Then("I am left on the logon page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 13
+ testRunner.And("A logon error message of \"Unauthorised\" is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Unauhorised Message: Variant 0")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Logon")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("LogonTest")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("VariantName", "Variant 0")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:username", "User123")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:password", "wrong")]
+        public virtual void UnauhorisedMessage_Variant0()
+        {
+            this.UnauhorisedMessage("User123", "wrong", ((string[])(null)));
+#line hidden
+        }
+        
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Unauhorised Message: Variant 1")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Logon")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("LogonTest")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("VariantName", "Variant 1")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:username", "abc")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:password", "123")]
+        public virtual void UnauhorisedMessage_Variant1()
+        {
+            this.UnauhorisedMessage("abc", "123", ((string[])(null)));
+#line hidden
+        }
+        
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Unauhorised Message: Variant 2")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Logon")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("LogonTest")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("VariantName", "Variant 2")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:username", "User123")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:password", "")]
+        public virtual void UnauhorisedMessage_Variant2()
+        {
+            this.UnauhorisedMessage("User123", "", ((string[])(null)));
 #line hidden
         }
         
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
         [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Login page is displayed correctly")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Logon")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("UiTest")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("LogonTest")]
         public virtual void LoginPageIsDisplayedCorrectly()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Login page is displayed correctly", new string[] {
-                        "UiTest"});
-#line 10
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line 11
- testRunner.Then("The login page is displayed correctly", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-            this.ScenarioCleanup();
-        }
-        
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("When a wrong user name is entered, an error message is shown and user is not logg" +
-            "ed in")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Logon")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("UiTest")]
-        public virtual void WhenAWrongUserNameIsEnteredAnErrorMessageIsShownAndUserIsNotLoggedIn()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When a wrong user name is entered, an error message is shown and user is not logg" +
-                    "ed in", new string[] {
-                        "UiTest"});
-#line 14
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line 15
- testRunner.When("I logon as a user with username: \"abc\" and password: \"123\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 16
- testRunner.Then("I am left on the logon page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 17
- testRunner.And("A logon error message of \"Unauthorised\" is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            this.ScenarioCleanup();
-        }
-        
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("When a wrong password is entered, an error message is shown and user is not logge" +
-            "d in")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Logon")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("UiTest")]
-        public virtual void WhenAWrongPasswordIsEnteredAnErrorMessageIsShownAndUserIsNotLoggedIn()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When a wrong password is entered, an error message is shown and user is not logge" +
-                    "d in", new string[] {
-                        "UiTest"});
-#line 20
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Login page is displayed correctly", ((string[])(null)));
 #line 21
- testRunner.When("I logon as a user with username: \"User123\" and password: \"wrong\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+this.ScenarioSetup(scenarioInfo);
+#line 7
+this.FeatureBackground();
 #line 22
- testRunner.Then("I am left on the logon page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 23
- testRunner.And("A logon error message of \"Unauthorised\" is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            this.ScenarioCleanup();
-        }
-        
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("When no password is entered, a validation icon is shown and user is not logged in" +
-            "")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Logon")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("UiTest")]
-        public virtual void WhenNoPasswordIsEnteredAValidationIconIsShownAndUserIsNotLoggedIn()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When no password is entered, a validation icon is shown and user is not logged in" +
-                    "", new string[] {
-                        "UiTest"});
-#line 26
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line 27
- testRunner.When("I logon as a user with username: \"User123\" and password: \"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 28
- testRunner.Then("I am left on the logon page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 29
- testRunner.And("A logon error message of \"Unauthorised\" is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            this.ScenarioCleanup();
-        }
-        
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("When no password is entered, an error message is shown and user is not logged in")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Logon")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("UiTest")]
-        public virtual void WhenNoPasswordIsEnteredAnErrorMessageIsShownAndUserIsNotLoggedIn()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When no password is entered, an error message is shown and user is not logged in", new string[] {
-                        "UiTest"});
-#line 32
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line 33
- testRunner.When("I logon as a user with username: \"User123\" and password: \"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 34
- testRunner.Then("I am left on the logon page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 35
- testRunner.And("A logon error icon is displayed for \"Password\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.Then("The login page is displayed correctly", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -191,46 +153,21 @@ this.FeatureBackground();
         [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("When no user name is entered, an error message is shown and user is not logged in" +
             "")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Logon")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("UiTest")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("LogonTest")]
         public virtual void WhenNoUserNameIsEnteredAnErrorMessageIsShownAndUserIsNotLoggedIn()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When no user name is entered, an error message is shown and user is not logged in" +
-                    "", new string[] {
-                        "UiTest"});
-#line 38
+                    "", ((string[])(null)));
+#line 24
 this.ScenarioSetup(scenarioInfo);
-#line 6
+#line 7
 this.FeatureBackground();
-#line 39
- testRunner.When("I logon as a user with username: \"\" and password: \"123\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 40
+#line 25
+ testRunner.When("I logon as a user with username: \'\' and password: \'123\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 26
  testRunner.Then("I am left on the logon page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 41
+#line 27
  testRunner.And("A logon error message of \"The Username field is required\" is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            this.ScenarioCleanup();
-        }
-        
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("When no user name is entered, a validation icon is shown and user is not logged i" +
-            "n")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Logon")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("UiTest")]
-        public virtual void WhenNoUserNameIsEnteredAValidationIconIsShownAndUserIsNotLoggedIn()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When no user name is entered, a validation icon is shown and user is not logged i" +
-                    "n", new string[] {
-                        "UiTest"});
-#line 44
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line 45
- testRunner.When("I logon as a user with username: \"\" and password: \"123\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 46
- testRunner.Then("I am left on the logon page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 47
- testRunner.And("A logon error icon is displayed for \"Username\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -239,48 +176,21 @@ this.FeatureBackground();
         [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("When no user name or password is entered, an error message is shown and user is n" +
             "ot logged in")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Logon")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("UiTest")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("LogonTest")]
         public virtual void WhenNoUserNameOrPasswordIsEnteredAnErrorMessageIsShownAndUserIsNotLoggedIn()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When no user name or password is entered, an error message is shown and user is n" +
-                    "ot logged in", new string[] {
-                        "UiTest"});
-#line 50
+                    "ot logged in", ((string[])(null)));
+#line 29
 this.ScenarioSetup(scenarioInfo);
-#line 6
+#line 7
 this.FeatureBackground();
-#line 51
- testRunner.When("I logon as a user with username: \"\" and password: \"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 52
+#line 30
+ testRunner.When("I logon as a user with username: \'\' and password: \'\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 31
  testRunner.Then("I am left on the logon page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 53
+#line 32
  testRunner.And("A logon error message of \"The Username field is required\" is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            this.ScenarioCleanup();
-        }
-        
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("When no user name or password is entered, a validation icons are shown and user i" +
-            "s not logged in")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Logon")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("UiTest")]
-        public virtual void WhenNoUserNameOrPasswordIsEnteredAValidationIconsAreShownAndUserIsNotLoggedIn()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When no user name or password is entered, a validation icons are shown and user i" +
-                    "s not logged in", new string[] {
-                        "UiTest"});
-#line 56
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line 57
- testRunner.When("I logon as a user with username: \"\" and password: \"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 58
- testRunner.Then("I am left on the logon page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 59
- testRunner.And("A logon error icon is displayed for \"Username\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 60
- testRunner.And("A logon error icon is displayed for \"Password\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -288,18 +198,17 @@ this.FeatureBackground();
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
         [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("When a user logs on successfully, they are shown their home page")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Logon")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("UiTest")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("LogonTest")]
         public virtual void WhenAUserLogsOnSuccessfullyTheyAreShownTheirHomePage()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When a user logs on successfully, they are shown their home page", new string[] {
-                        "UiTest"});
-#line 63
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When a user logs on successfully, they are shown their home page", ((string[])(null)));
+#line 34
 this.ScenarioSetup(scenarioInfo);
-#line 6
+#line 7
 this.FeatureBackground();
-#line 64
- testRunner.When("I logon as a user with username: \"User123\" and password: \"123\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 65
+#line 35
+ testRunner.When("I logon as a user with username: \'User123\' and password: \'123\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 36
  testRunner.Then("The user\'s home page is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

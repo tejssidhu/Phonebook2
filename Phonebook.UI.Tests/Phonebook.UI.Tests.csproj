@@ -55,7 +55,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Drivers\ILoginDriver.cs" />
+    <Compile Include="Drivers\LoginDriver.cs" />
+    <Compile Include="Interfaces\ILoginDriver.cs" />
     <Compile Include="Specifications\Logon.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -63,9 +64,14 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Steps\LogonFeatureSteps.cs" />
+    <Compile Include="Steps\NavigationSteps.cs" />
+    <Compile Include="Steps\ScenarioBeforeAndAfter.cs" />
+    <Compile Include="WebBrowser.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Specifications\Logon.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Logon.feature.cs</LastGenOutput>
