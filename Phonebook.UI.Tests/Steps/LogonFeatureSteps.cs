@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Phonebook.UI.Tests.Drivers;
+using Phonebook.UI.Tests.Interfaces;
 using TechTalk.SpecFlow;
 
 namespace Phonebook.UI.Tests.Steps
@@ -7,51 +8,48 @@ namespace Phonebook.UI.Tests.Steps
 	[Binding]
 	public class LogonFeatureSteps
 	{
-		//private ILoginDriver LoginDriver { get; set; }
+		private ILoginDriver LoginDriver { get; set; }
 
-		//public LogonFeatureSteps(ILoginDriver loginDriver)
-		//{
-		//	LoginDriver = loginDriver;
-		//}
-
-		[Given(@"I am on the Phonebook logon page")]
-		public void GivenIAmOnThePhonebookLogonPage()
+		//TODO: add DI ILoginDriver loginDriver
+		public LogonFeatureSteps()
 		{
-			WebBrowser.Current.Navigate().GoToUrl("http://localhost/phonebook");
+			LoginDriver = new LoginDriver();
 		}
-
+		
 		[When(@"I logon as a user with username: '(.*)' and password: '(.*)'")]
 		public void WhenILogonAsAUserWithUsernameAndPassword(string username, string password)
 		{
-			var loginPage = new LoginDriver();
-
-			loginPage.Logon(username, password);
+			LoginDriver.Logon(username, password);
 		}
 
 		[Then(@"The login page is displayed correctly")]
 		public void ThenTheLoginPageIsDisplayedCorrectly()
 		{
-			ScenarioContext.Current.Pending();
+			var onLogonPage = LoginDriver.LoginPageIsShown();
+
+			Assert.IsTrue(onLogonPage);
 		}
 		
 		[Then(@"I am left on the logon page")]
 		public void ThenIAmLeftOnTheLogonPage()
 		{
-			ScenarioContext.Current.Pending();
+			var onLogonPage = LoginDriver.LoginPageIsShown();
+
+			Assert.IsTrue(onLogonPage);
 		}
 
 		[Then(@"A logon error message of ""(.*)"" is shown")]
 		public void ThenALogonErrorMessageOfIsShown(string errorMessage)
 		{
-			var loginPage = new LoginDriver();
-
-			Assert.AreEqual(errorMessage, loginPage.GetLogonErrorMessage());
+			Assert.AreEqual(errorMessage, LoginDriver.GetLogonErrorMessage());
 		}
 
 		[Then(@"The user's home page is displayed")]
 		public void ThenTheUserSHomePageIsDisplayed()
 		{
-			ScenarioContext.Current.Pending();
+			var onHomePage = LoginDriver.WasLogonSuccessful();
+
+			Assert.IsTrue(onHomePage);
 		}
 	}
 }

@@ -10,17 +10,17 @@ Background:
 Scenario: When wrong password is entered, an Unauthorised error message is shown and the user is not logged in
 	When I logon as a user with username: 'User123' and password: 'wrong'
 	Then I am left on the logon page
-	And A logon error message of "Unauthorised" is shown
+	And A logon error message of "Unauthorized" is shown
 
 Scenario: When wrong username is entered, an Unauthorised error message is shown and the user is not logged in
 	When I logon as a user with username: 'abc' and password: '123'
 	Then I am left on the logon page
-	And A logon error message of "Unauthorised" is shown
+	And A logon error message of "Unauthorized" is shown
 
 Scenario: When no password is entered, an Unauthorised error message is shown and the user is not logged in
 	When I logon as a user with username: 'User123' and password: ''
 	Then I am left on the logon page
-	And A logon error message of "Unauthorised" is shown
+	And A logon error message of "UserName and Password are required" is shown
 
 Scenario: Login page is displayed correctly
 	Then The login page is displayed correctly
@@ -28,12 +28,12 @@ Scenario: Login page is displayed correctly
 Scenario: When no user name is entered, an error message is shown and user is not logged in
 	When I logon as a user with username: '' and password: '123'
 	Then I am left on the logon page
-	And A logon error message of "The Username field is required" is shown
+	And A logon error message of "UserName and Password are required" is shown
 
 Scenario: When no user name or password is entered, an error message is shown and user is not logged in
 	When I logon as a user with username: '' and password: ''
 	Then I am left on the logon page
-	And A logon error message of "The Username field is required" is shown
+	And A logon error message of "UserName and Password are required" is shown
 
 Scenario: When a user logs on successfully, they are shown their home page
 	When I logon as a user with username: 'User123' and password: '123'

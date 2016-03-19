@@ -29,12 +29,6 @@
 		logonSuccess();
 	}
 
-	function getAuthHash(user, pass) {
-		var tok = user + ':' + pass;
-		var hash = Base64.encode(tok);
-		return "Basic " + hash;
-	}
-
 	function logonSuccess(data, textStatus, jqXHR) {
 		var data = {
 			Id: jqXHR.getResponseHeader("UserId"),

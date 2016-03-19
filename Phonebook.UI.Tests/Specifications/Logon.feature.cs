@@ -94,7 +94,7 @@ this.FeatureBackground();
 #line 12
  testRunner.Then("I am left on the logon page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 13
- testRunner.And("A logon error message of \"Unauthorised\" is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("A logon error message of \"Unauthorized\" is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -117,7 +117,7 @@ this.FeatureBackground();
 #line 17
  testRunner.Then("I am left on the logon page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 18
- testRunner.And("A logon error message of \"Unauthorised\" is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("A logon error message of \"Unauthorized\" is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -140,7 +140,7 @@ this.FeatureBackground();
 #line 22
  testRunner.Then("I am left on the logon page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 23
- testRunner.And("A logon error message of \"Unauthorised\" is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("A logon error message of \"UserName and Password are required\" is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -180,7 +180,7 @@ this.FeatureBackground();
 #line 30
  testRunner.Then("I am left on the logon page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 31
- testRunner.And("A logon error message of \"The Username field is required\" is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("A logon error message of \"UserName and Password are required\" is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -203,7 +203,7 @@ this.FeatureBackground();
 #line 35
  testRunner.Then("I am left on the logon page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 36
- testRunner.And("A logon error message of \"The Username field is required\" is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("A logon error message of \"UserName and Password are required\" is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
