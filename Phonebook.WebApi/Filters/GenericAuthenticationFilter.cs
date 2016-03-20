@@ -9,6 +9,7 @@ using System.Text;
 using System.Net;
 using System.Net.Http;
 using System.Security.Principal;
+using Phonebook.WebApi.Managers;
 
 namespace Phonebook.WebApi.Filters
 {
@@ -53,14 +54,14 @@ namespace Phonebook.WebApi.Filters
 			var genericPrincipal = new GenericPrincipal(identity, null);
 
 			Thread.CurrentPrincipal = genericPrincipal;
-			HttpContext.Current.User = genericPrincipal;
+			HttpContextManager.Current.User = genericPrincipal;
 
 			if (!OnAuthorizeUser(identity.Name, identity.Password, filterContext))
 			{
 				genericPrincipal = new GenericPrincipal(new GenericIdentity(""), new string[0]);
 
 				Thread.CurrentPrincipal = genericPrincipal;
-				HttpContext.Current.User = genericPrincipal;
+				HttpContextManager.Current.User = genericPrincipal;
 
 				ChallengeAuthRequest(filterContext);
 

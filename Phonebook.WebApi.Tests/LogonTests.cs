@@ -5,6 +5,7 @@ using Phonebook.Domain.Interfaces.Services;
 using Phonebook.Domain.Model;
 using Phonebook.WebApi.Controllers;
 using Phonebook.WebApi.Filters;
+using Phonebook.WebApi.Managers;
 using Phonebook.WebApi.Tests.DependencyResolution;
 using StructureMap;
 using System;
@@ -29,6 +30,8 @@ namespace Phonebook.WebApi.Tests
 		[TestInitialize]
 		public void TestUserServiceTests()
 		{
+			HttpContextManager.SetCurrentContext(Utils.ContextUtil.GetMockedHttpContext());
+
 			_user = new User { Id = new Guid("26e31dde-4bcb-47d4-be80-958676c5cafd"), Password = "789", Username = "User789" };
 
 			var user1 = new User { Id = new Guid("7b8ceac1-9fb1-4e15-af4b-890b1f0c3ebf"), Password = "123", Username = "User123" };
