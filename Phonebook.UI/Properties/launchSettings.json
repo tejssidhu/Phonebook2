@@ -1,0 +1,32 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:3999/",
+      "sslPort": 0
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "http://localhost:3999/",
+      "environmentVariables": {
+        "Hosting:Environment": "Development"
+      }
+    },
+    "web": {
+      "commandName": "web",
+      "environmentVariables": {
+        "Hosting:Environment": "Development"
+      }
+    },
+    "Phonebook": {
+      "commandName": "web",
+      "workingDirectory": "C:\\TejPersonalDocs\\Tejs Docs\\Projects\\Visual Studio\\Phonebook2\\Phonebook.UI\\wwwroot",
+      "launchBrowser": true,
+      "launchUrl": "http://localhost/phonebook"
+    }
+  }
+}

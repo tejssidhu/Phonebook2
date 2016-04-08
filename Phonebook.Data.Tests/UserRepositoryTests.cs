@@ -4,12 +4,10 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Phonebook.Domain.Model;
 using Phonebook.Data.Context;
-using Phonebook.Data.Repositories;
-using Phonebook.Data;
 
 namespace Phonebook.Data.Tests
 {
-	[TestClass]
+    [TestClass]
 	public class UserRepositoryTests
 	{
 		private List<User> _users;
