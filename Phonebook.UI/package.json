@@ -7,6 +7,7 @@
       "aurelia-bootstrapper": "npm:aurelia-bootstrapper@^1.0.0-beta.1.2.0",
       "aurelia-framework": "npm:aurelia-framework@^1.0.0-beta.1.2.0",
       "aurelia-http-client": "npm:aurelia-http-client@^1.0.0-beta.1.2.0",
+      "aurelia-validation": "npm:aurelia-validation@^0.6.6",
       "bootstrap": "github:twbs/bootstrap@^3.3.6",
       "font-awesome": "npm:font-awesome@^4.5.0"
     },
@@ -15,5 +16,10 @@
       "babel-runtime": "npm:babel-runtime@^5.8.24",
       "core-js": "npm:core-js@^1.1.4"
     }
+  },
+  "devDependencies": {
+    "aurelia-cli": "^0.3.1",
+    "gulp": "^3.9.1",
+    "gulp-uglify": "^1.5.3"
   }
 }
